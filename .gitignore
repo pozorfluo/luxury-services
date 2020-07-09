@@ -1,4 +1,15 @@
+# volatile folders
+.[Aa]rchive/
+.tmp/
+# .archive/*
+# .tmp/*
+
+# php
 composer.phar
+phpDocumentor.phar
+vendor/
+.phpdoc/
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
