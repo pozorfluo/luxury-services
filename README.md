@@ -1,13 +1,12 @@
 # Luxury Services
 ## todo
 - [ ] Import simplon-tp-product-hunt with doctrine
-    + [ ] Study how it deals with deals with the different relationship 
+    + [ ] Study how doctrine deals with the different relationship 
           cardinality types
-- [ ] Let symfony's auth bundle thing deal with this and piggyback profile off 
+- [ ] Let symfony's auth bundle thing deal with user and piggyback profile off 
       it
 - [ ] Be very careful with the ON DELETE/UPDATE cascade clause
     + [ ] Check if/how Doctrine specify them
-    + [ ] Make sure they don't work backwards
 - [ ] Consider alternative ways to handle the polymorphic association necessary
       for adminNote
 
