@@ -13,7 +13,6 @@ php bin/console make:entity
 # generate basic crud pages
 php bin/console make:crud
 
-
 # list doctrine commands
 php bin/console list doctrine
 
