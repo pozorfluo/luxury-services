@@ -37,11 +37,6 @@ class AdminNote
      */
     private $updatedAt;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Profile::class, mappedBy="adminNote", cascade={"persist", "remove"})
-     */
-    private $target;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -91,24 +86,6 @@ class AdminNote
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getTarget(): ?Profile
-    {
-        return $this->target;
-    }
-
-    public function setTarget(?Profile $target): self
-    {
-        $this->target = $target;
-
-        // set (or unset) the owning side of the relation if necessary
-        $newAdminNote = null === $target ? null : $this;
-        if ($target->getAdminNote() !== $newAdminNote) {
-            $target->setAdminNote($newAdminNote);
-        }
 
         return $this;
     }

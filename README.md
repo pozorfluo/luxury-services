@@ -52,9 +52,9 @@ adminNote
     createdAt
     updatedAt
 
-adminNoteTarget
-    id
-    type
+\\adminNoteTarget
+\\    id
+\\    type
 
 application
     ->profile
@@ -63,9 +63,11 @@ application
 
 client
     id
+
     ->adminNote
+    ->jobSector
+
     companyName
-    sector
     contactName
     contactPosition
     email

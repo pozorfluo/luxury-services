@@ -17,7 +17,6 @@ php bin/console make:crud
 # list doctrine commands
 php bin/console list doctrine
 
-
 # deal with enums 
 # see https://www.maxpou.fr/dealing-with-enum-symfony-doctrine
 
