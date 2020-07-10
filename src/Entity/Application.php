@@ -15,17 +15,18 @@ class Application
      * @ORM\ManyToOne(
      *   targetEntity=Profile::class,
      *   inversedBy="applications",
-     *   onDelete="CASCADE"
      * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $profile;
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity=Job::class,
+     * @ORM\ManyToOne(
+     *   targetEntity=Job::class,
      *   inversedBy="applicants",
-     *   onDelete="CASCADE"
      * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $job;
 
