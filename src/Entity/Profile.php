@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\AnnotatedItem;
 use App\Repository\ProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -122,6 +124,17 @@ class Profile extends AnnotatedItem
      * @ORM\ManyToOne(targetEntity=JobSector::class, inversedBy="profiles")
      */
     private $jobSector;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Application::class, mappedBy="profile")
+     */
+    private $applications;
+
+    public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -376,6 +389,37 @@ class Profile extends AnnotatedItem
     public function setJobSector(?JobSector $jobSector): self
     {
         $this->jobSector = $jobSector;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|application[]
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplications(Application $application): self
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications[] = $application;
+            $application->setProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplications(Application $application): self
+    {
+        if ($this->applications->contains($application)) {
+            $this->applications->removeElement($application);
+            // set the owning side to null (unless already changed)
+            if ($application->getProfile() === $this) {
+                $application->setProfile(null);
+            }
+        }
 
         return $this;
     }
