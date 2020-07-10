@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\AnnotatedItem;
 use App\Repository\JobRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=JobRepository::class)
  */
-class Job
+class Job extends AnnotatedItem
 {
     /**
      * @ORM\Id()

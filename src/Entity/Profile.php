@@ -114,7 +114,7 @@ class Profile extends AnnotatedItem
     private $deletedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=AdminNote::class, inversedBy="target", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=AdminNote::class, cascade={"persist", "remove"})
      */
     private $adminNote;
 

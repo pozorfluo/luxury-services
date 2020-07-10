@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
  *   "client"  = "Client",
- *   "profile" = "Profile"
+ *   "profile" = "Profile",
+ *   "job" = "Job"
  * })
  */
 abstract class AnnotatedItem

@@ -36,7 +36,7 @@ class Client extends AnnotatedItem
     private $contactPosition;
 
     /**
-     * @ORM\OneToOne(targetEntity=AdminNote::class, inversedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=AdminNote::class, cascade={"persist", "remove"})
      */
     private $adminNote;
 
