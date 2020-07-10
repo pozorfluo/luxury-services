@@ -80,7 +80,17 @@ job
     ->client
     ->adminNote
     ->jobSector
-
+    
+    reference
+    description
+    isActive
+    title
+    type
+    location
+    closingDate
+    salary
+    createdAt
+    updatedAt
 
 jobSector
     id
