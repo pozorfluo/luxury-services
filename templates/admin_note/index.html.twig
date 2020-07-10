@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AdminNote index{% endblock %}
+
+{% block body %}
+    <h1>AdminNote index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Content</th>
+                <th>Files</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for admin_note in admin_notes %}
+            <tr>
+                <td>{{ admin_note.id }}</td>
+                <td>{{ admin_note.content }}</td>
+                <td>{{ admin_note.files ? admin_note.files|json_encode : '' }}</td>
+                <td>{{ admin_note.createdAt ? admin_note.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ admin_note.updatedAt ? admin_note.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('admin_note_show', {'id': admin_note.id}) }}">show</a>
+                    <a href="{{ path('admin_note_edit', {'id': admin_note.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_note_new') }}">Create new</a>
+{% endblock %}

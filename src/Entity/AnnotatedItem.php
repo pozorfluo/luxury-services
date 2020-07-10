@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+// use App\Entity\Job;
+// use App\Entity\Client;
+// use App\Entity\Profile;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
