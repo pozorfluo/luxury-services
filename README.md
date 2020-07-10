@@ -1,12 +1,13 @@
 # Luxury Services
 ## todo
+- [ ] Be very careful with the ON DELETE/UPDATE cascade clause
+    + [ ] Check if/how Doctrine specify them
+    + [ ] Add ON DELETE Cascade to anything pointing to AdminNote
 - [ ] Import simplon-tp-product-hunt with doctrine
     + [ ] Study how doctrine deals with the different relationship 
           cardinality types
 - [ ] Let symfony's auth bundle thing deal with user and piggyback profile off 
       it
-- [ ] Be very careful with the ON DELETE/UPDATE cascade clause
-    + [ ] Check if/how Doctrine specify them
 - [ ] Consider alternative ways to handle the polymorphic association necessary
       for adminNote
 
@@ -80,8 +81,7 @@ job
     ->client
     ->adminNote
     ->jobSector
-    
-    reference
+
     description
     isActive
     title

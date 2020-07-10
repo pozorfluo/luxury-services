@@ -118,6 +118,11 @@ class Profile extends AnnotatedItem
      */
     private $adminNote;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=JobSector::class, inversedBy="profiles")
+     */
+    private $jobSector;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -359,6 +364,18 @@ class Profile extends AnnotatedItem
     public function setAdminNote(?AdminNote $adminNote): self
     {
         $this->adminNote = $adminNote;
+
+        return $this;
+    }
+
+    public function getJobSector(): ?JobSector
+    {
+        return $this->jobSector;
+    }
+
+    public function setJobSector(?JobSector $jobSector): self
+    {
+        $this->jobSector = $jobSector;
 
         return $this;
     }

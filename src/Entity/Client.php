@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\AnnotatedItem;
 use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,6 +59,21 @@ class Client extends AnnotatedItem
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=JobSector::class, inversedBy="clients")
+     */
+    private $jobSector;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Job::class, mappedBy="client", orphanRemoval=true)
+     */
+    private $jobs;
+
+    public function __construct()
+    {
+        $this->jobs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +172,49 @@ class Client extends AnnotatedItem
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getJobSector(): ?JobSector
+    {
+        return $this->jobSector;
+    }
+
+    public function setJobSector(?JobSector $jobSector): self
+    {
+        $this->jobSector = $jobSector;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Job[]
+     */
+    public function getJobs(): Collection
+    {
+        return $this->jobs;
+    }
+
+    public function addJob(Job $job): self
+    {
+        if (!$this->jobs->contains($job)) {
+            $this->jobs[] = $job;
+            $job->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJob(Job $job): self
+    {
+        if ($this->jobs->contains($job)) {
+            $this->jobs->removeElement($job);
+            // set the owning side to null (unless already changed)
+            if ($job->getClient() === $this) {
+                $job->setClient(null);
+            }
+        }
 
         return $this;
     }
