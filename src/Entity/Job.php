@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\AnnotatedItem;
 use App\Repository\JobRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -79,6 +81,11 @@ class Job extends AnnotatedItem
      * @ORM\JoinColumn(nullable=false)
      */
     private $jobSector;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Application::class, mappedBy="job")
+     */
+    private $applicants;
 
     public function getId(): ?int
     {
@@ -225,6 +232,37 @@ class Job extends AnnotatedItem
     public function setJobSector(?JobSector $jobSector): self
     {
         $this->jobSector = $jobSector;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|application[]
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplications(Application $application): self
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications[] = $application;
+            $application->setJob($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplications(Application $application): self
+    {
+        if ($this->applications->contains($application)) {
+            $this->applications->removeElement($application);
+            // set the owning side to null (unless already changed)
+            if ($application->getJob() === $this) {
+                $application->setJob(null);
+            }
+        }
 
         return $this;
     }
