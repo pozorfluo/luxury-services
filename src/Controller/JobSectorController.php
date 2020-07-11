@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Entity\JobSector;
 use App\Form\JobSectorType;
 use App\Repository\JobSectorRepository;

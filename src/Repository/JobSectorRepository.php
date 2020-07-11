@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Job;
+use App\Entity\JobSector;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
