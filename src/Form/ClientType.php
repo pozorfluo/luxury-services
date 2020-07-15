@@ -17,8 +17,8 @@ class ClientType extends AbstractType
             ->add('contactPosition')
             ->add('email')
             ->add('phone')
-            ->add('createdAt')
-            ->add('updatedAt')
+            // ->add('createdAt')
+            // ->add('updatedAt')
             ->add('adminNote')
             ->add('jobSector')
         ;
