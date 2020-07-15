@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\AnnotatedItem;
 use App\Repository\ProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ProfileRepository::class)
  */
-class Profile extends AnnotatedItem
+class Profile
 {
     /**
      * @ORM\Id()

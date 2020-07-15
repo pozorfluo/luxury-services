@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\AnnotatedItem;
 use App\Repository\JobRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=JobRepository::class)
  */
-class Job extends AnnotatedItem
+class Job
 {
     /**
      * @ORM\Id()

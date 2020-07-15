@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Form\ClientType;
+use DateTime;
 use App\Repository\ClientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +37,11 @@ class ClientController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+
+            $now = new DateTime();
+            $client->setCreatedAt($now)
+                ->setUpdatedAt($now);
+
             $entityManager->persist($client);
             $entityManager->flush();
 
@@ -83,7 +89,7 @@ class ClientController extends AbstractController
      */
     public function delete(Request $request, Client $client): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $client->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($client);
             $entityManager->flush();
