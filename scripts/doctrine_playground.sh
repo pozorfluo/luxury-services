@@ -13,6 +13,13 @@ php bin/console make:entity
 # generate basic crud pages
 php bin/console make:crud
 
+# check forms or a specific form
+php bin/console debug:form
+php bin/console debug:form AdminNoteType
+
+# check routes
+php bin/console debug:route
+
 # list doctrine commands
 php bin/console list doctrine
 

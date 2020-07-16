@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -76,6 +77,10 @@ class Profile
 
     /**
      * @ORM\Column(type="date_immutable", nullable=true)
+     * @Assert\Range(
+     *      min = "-120 years",
+     *      max = "now"
+     * )
      */
     private $dateOfBirth;
 
