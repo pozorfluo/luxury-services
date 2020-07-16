@@ -30,6 +30,15 @@ class AdminNoteController extends AbstractController
         ]);
     }
     /**
+     * todo Restrict access to admin.
+     * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
+     * 
+     * @Route("/{id}", name="admin_note_download", methods={"GET"})
+     */
+    // public function download(AdminNote $adminNote): Response
+    // {
+    // }
+    /**
      * @Route("/new", name="admin_note_new", methods={"GET","POST"})
      */
     public function new(
