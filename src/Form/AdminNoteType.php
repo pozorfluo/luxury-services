@@ -16,7 +16,7 @@ class AdminNoteType extends AbstractType
         $builder
             ->add('content')
             ->add('file', FileType::class, [
-                'label' => 'image or PDF file.',
+                'label' => 'Upload an image or PDF document.',
                 // 'data_class' => null
                 'mapped' => false,
                 'required' => false,
@@ -28,13 +28,14 @@ class AdminNoteType extends AbstractType
                             'application/x-pdf',
                             'image/*'
                         ],
-                        'maxSizeMessage' => 'The file is too large ({{ size }} {{ suffix }})'
+                        'maxSizeMessage' => 'The file is too large ({{ size }} {{ suffix }}). '
                             . 'Allowed maximum size is {{ limit }} {{ suffix }}.',
-                        'mimeTypesMessage' => 'Please upload an image or PDF document.'
+                        'mimeTypesMessage' => 'Please upload an image or PDF document. '
                             . 'The mime type of the file is invalid ({{ type }}). '
-                            . 'Allowed mime types are {{ types }}.'
+                            . 'Allowed mime types are {{ types }}.',
                     ])
-                ]
+                    ],
+                    'attr' => [ 'class'=> 'form-inline']
             ])
             // ->add('createdAt')
             // ->add('updatedAt')

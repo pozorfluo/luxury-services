@@ -1,6 +1,7 @@
 # volatile folders
 .[Aa]rchive/
 .tmp/
+resources/assets/admin/
 # .archive/*
 # .tmp/*
 

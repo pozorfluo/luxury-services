@@ -19,7 +19,7 @@ class ClientType extends AbstractType
             ->add('phone')
             // ->add('createdAt')
             // ->add('updatedAt')
-            ->add('adminNote')
+            // ->add('adminNote')
             ->add('jobSector')
         ;
     }

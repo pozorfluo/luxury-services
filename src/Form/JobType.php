@@ -22,7 +22,7 @@ class JobType extends AbstractType
             // ->add('createdAt')
             // ->add('updatedAt')
             ->add('client')
-            ->add('adminNote')
+            // ->add('adminNote')
             ->add('jobSector');
     }
 

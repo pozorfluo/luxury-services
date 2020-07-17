@@ -15,7 +15,7 @@ php bin/console make:crud
 
 # check forms or a specific form
 php bin/console debug:form
-php bin/console debug:form AdminNoteType
+php bin/console debug:form FileType
 
 # check routes
 php bin/console debug:route

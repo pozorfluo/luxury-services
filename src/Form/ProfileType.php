@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Profile;
+use Doctrine\DBAL\Types\DateType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,7 +25,9 @@ class ProfileType extends AbstractType
             ->add('curriculumVitae')
             ->add('picture')
             ->add('currentLocation')
-            ->add('dateOfBirth')
+            ->add('dateOfBirth', BirthdayType::class, [
+                'widget' => 'single_text'
+            ])
             ->add('placeOfBirth')
             ->add('isAvailable')
             ->add('experience')
@@ -31,7 +35,7 @@ class ProfileType extends AbstractType
             // ->add('createdAt')
             // ->add('updatedAt')
             // ->add('deletedAt')
-            ->add('adminNote')
+            // ->add('adminNote')
             ->add('jobSector')
         ;
     }
