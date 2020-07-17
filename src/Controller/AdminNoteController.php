@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class AdminNoteController extends AbstractController
 {
+    use FileUploadTrait;
     /**
      * @Route("/", name="admin_note_index", methods={"GET"})
      */
@@ -30,29 +31,6 @@ class AdminNoteController extends AbstractController
         ]);
     }
 
-    private function saveUpload(UploadedFile $file, SluggerInterface $slugger): string
-    {
-        $client_filename = pathinfo(
-            $file->getClientOriginalName(),
-            PATHINFO_FILENAME
-        );
-
-        $filename = $slugger->slug($client_filename)
-            . '_'
-            . bin2hex(random_bytes(12))
-            . '.'
-            . $file->guessExtension();
-        try {
-
-            $file->move(
-                $this->getParameter('admin_notes_dir'),
-                $filename
-            );
-        } catch (FileException $e) {
-            $filename = $e;
-        }
-        return $filename;
-    }
     /**
      * @Route("/new", name="admin_note_new", methods={"GET","POST"})
      */
@@ -74,7 +52,11 @@ class AdminNoteController extends AbstractController
             $file = $form->get('file')->getData();
 
             if ($file) {
-                $filename = $this->saveUpload($file, $slugger);
+                $filename = $this->saveUpload(
+                    $file,
+                    $this->getParameter('admin_notes_dir'),
+                    $slugger
+                );
                 $adminNote->setFiles([$filename]);
             }
 
@@ -133,7 +115,10 @@ class AdminNoteController extends AbstractController
      */
     public function delete(Request $request, AdminNote $adminNote): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $adminNote->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid(
+            'delete' . $adminNote->getId(),
+            $request->request->get('_token')
+        )) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($adminNote);
             $entityManager->flush();
@@ -144,12 +129,12 @@ class AdminNoteController extends AbstractController
 }
 
 
-    /**
-     * todo Restrict access to admin.
-     * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
-     * 
-     * @Route("/{id}", name="admin_note_download", methods={"GET"})
-     */
+/**
+ * todo Restrict access to admin.
+ * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
+ * 
+ * @Route("/{id}", name="admin_note_download", methods={"GET"})
+ */
     // public function download(AdminNote $adminNote): Response
     // {
     // }
