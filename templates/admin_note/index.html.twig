@@ -20,7 +20,7 @@ block body %}
       <td>{{ admin_note.content }}</td>
       <td>
         {% for file in admin_note.files %}
-        <a href="{{ admin_notes_dir }}/{{ file }}">{{ file }}</a>
+        <a href="{{ path('admin_note_download', { filename: file }) }}">{{ file }}</a>
         {% endfor %}
       </td>
 
@@ -33,6 +33,7 @@ block body %}
       <td>
         <a href="{{ path('admin_note_show', { id: admin_note.id }) }}">show</a>
         <a href="{{ path('admin_note_edit', { id: admin_note.id }) }}">edit</a>
+        {{ include('admin_note/_delete_form.html.twig') }}
       </td>
     </tr>
     {% else %}

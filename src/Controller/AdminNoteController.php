@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -122,19 +121,36 @@ class AdminNoteController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($adminNote);
             $entityManager->flush();
+
+
+            foreach ($adminNote->getFiles() as $filename) {
+                $this->deleteSavedUpload(
+                    $filename,
+                    $this->getParameter('admin_notes_dir')
+                );
+                $this->addFlash(
+                    'notice',
+                    $filename . ' deleted !'
+                );
+            }
         }
 
         return $this->redirectToRoute('admin_note_index');
     }
+
+
+    /**
+     * todo Restrict access to admin.
+     * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
+     * 
+     * @Route("/download/{filename}", name="admin_note_download", methods={"GET"})
+     */
+    public function download(string $filename): Response
+    {
+        return $this->streamSavedUpload(
+            $filename,
+            $this->getParameter('admin_notes_dir'),
+            false
+        );
+    }
 }
-
-
-/**
- * todo Restrict access to admin.
- * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
- * 
- * @Route("/{id}", name="admin_note_download", methods={"GET"})
- */
-    // public function download(AdminNote $adminNote): Response
-    // {
-    // }
