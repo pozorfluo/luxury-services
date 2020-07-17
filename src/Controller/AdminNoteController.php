@@ -29,15 +29,30 @@ class AdminNoteController extends AbstractController
             'admin_notes' => $adminNoteRepository->findAll(),
         ]);
     }
-    /**
-     * todo Restrict access to admin.
-     * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
-     * 
-     * @Route("/{id}", name="admin_note_download", methods={"GET"})
-     */
-    // public function download(AdminNote $adminNote): Response
-    // {
-    // }
+
+    private function saveUpload(UploadedFile $file, SluggerInterface $slugger): string
+    {
+        $client_filename = pathinfo(
+            $file->getClientOriginalName(),
+            PATHINFO_FILENAME
+        );
+
+        $filename = $slugger->slug($client_filename)
+            . '_'
+            . bin2hex(random_bytes(12))
+            . '.'
+            . $file->guessExtension();
+        try {
+
+            $file->move(
+                $this->getParameter('admin_notes_dir'),
+                $filename
+            );
+        } catch (FileException $e) {
+            $filename = $e;
+        }
+        return $filename;
+    }
     /**
      * @Route("/new", name="admin_note_new", methods={"GET","POST"})
      */
@@ -59,40 +74,10 @@ class AdminNoteController extends AbstractController
             $file = $form->get('file')->getData();
 
             if ($file) {
-
-                // $dir = $parameterBag->get('kernel.project_dir')
-                //     . DIRECTORY_SEPARATOR
-                //     . 'resources'
-                //     . DIRECTORY_SEPARATOR
-                //     . 'assets'
-                //     . DIRECTORY_SEPARATOR
-                //     . 'admin';
-
-                // if (is_dir($dir)) {
-                $client_filename = pathinfo(
-                    $file->getClientOriginalName(),
-                    PATHINFO_FILENAME
-                );
-
-                $filename = $slugger->slug($client_filename)
-                    . '_'
-                    . bin2hex(random_bytes(12))
-                    . '.'
-                    . $file->guessExtension();
-                try {
-
-                    $file->move(
-                        $this->getParameter('admin_notes_dir'),
-                        $filename
-                    );
-                } catch (FileException $e) {
-                    $filename = $e;
-                }
-                // } else {
-                //     $filename = 'error : ressources/assets/admin does not exist.';
-                // }
+                $filename = $this->saveUpload($file, $slugger);
+                $adminNote->setFiles([$filename]);
             }
-            $adminNote->setFiles([$filename]);
+
             $now = new DateTime();
             $adminNote->setCreatedAt($now)
                 ->setUpdatedAt($now);
@@ -100,6 +85,10 @@ class AdminNoteController extends AbstractController
             $entityManager->persist($adminNote);
             $entityManager->flush();
 
+            $this->addFlash(
+                'notice',
+                'Note created !'
+            );
             return $this->redirectToRoute('admin_note_index');
         }
 
@@ -153,3 +142,14 @@ class AdminNoteController extends AbstractController
         return $this->redirectToRoute('admin_note_index');
     }
 }
+
+
+    /**
+     * todo Restrict access to admin.
+     * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
+     * 
+     * @Route("/{id}", name="admin_note_download", methods={"GET"})
+     */
+    // public function download(AdminNote $adminNote): Response
+    // {
+    // }
