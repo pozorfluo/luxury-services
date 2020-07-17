@@ -67,9 +67,14 @@ class AdminNoteController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash(
-                'notice',
+                'success',
                 'Note created !'
             );
+            $this->addFlash(
+                'notice',
+                $file . ' saved !'
+            );
+            
             return $this->redirectToRoute('admin_note_index');
         }
 

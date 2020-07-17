@@ -85,14 +85,7 @@
     {% endblock %}
     <div class="container pt-5">
 
-      {# read and display all flash messages #}
-      {% for label, messages in app.flashes %}
-          {% for message in messages %}
-              <div class="alert alert-primary flash-{{ label }}" >
-                  {{ message }}
-              </div>
-          {% endfor %}
-      {% endfor %}
+      {{ include('_flash.html.twig')}}
 
       {% block body %}{% endblock %}
     </div>
