@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
  * @Route("/profile")
@@ -21,9 +23,19 @@ class ProfileController extends AbstractController
 {
     use FileUploadTrait;
     /**
-     * @Route("/", name="profile_index", methods={"GET"})
+     * @Route("/list", name="profile_index", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function index(ProfileRepository $profileRepository): Response
+    {
+        return $this->render('profile/index.html.twig', [
+            'profiles' => $profileRepository->findAll(),
+        ]);
+    }
+    /**
+     * @Route("/", name="profile_show_user", methods={"GET"})
+     */
+    public function showUser(ProfileRepository $profileRepository): Response
     {
         return $this->render('profile/index.html.twig', [
             'profiles' => $profileRepository->findAll(),
@@ -37,7 +49,7 @@ class ProfileController extends AbstractController
     {
         $profile = new Profile();
         $profile->setAdminNote(new AdminNote());
-        
+
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
@@ -61,6 +73,7 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/{id}", name="profile_show", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function show(Profile $profile): Response
     {
@@ -71,6 +84,7 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="profile_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(
         Request $request,
@@ -125,6 +139,7 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/{id}", name="profile_delete", methods={"DELETE"})
+     *  @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Profile $profile): Response
     {

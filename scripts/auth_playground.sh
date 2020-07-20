@@ -20,3 +20,6 @@ php bin/console make:fixtures
 
 # empty database and reload all fixture classes
 php bin/console doctrine:fixtures:load
+
+# create a new security voter class
+php bin/console make:voter
