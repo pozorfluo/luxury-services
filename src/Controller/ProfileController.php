@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
@@ -35,10 +36,21 @@ class ProfileController extends AbstractController
     /**
      * @Route("/", name="profile_show_user", methods={"GET"})
      */
-    public function showUser(ProfileRepository $profileRepository): Response
+    public function showUser(): Response
     {
-        return $this->render('profile/index.html.twig', [
-            'profiles' => $profileRepository->findAll(),
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        // if the user is anonymous, redirect to login form
+        if (!$user instanceof UserInterface) {
+            return $this->redirectToRoute('root');
+        }
+
+        $profile = $user->getProfile();
+        $this->denyAccessUnlessGranted('view', $profile);
+
+        return $this->render('profile/show.html.twig', [
+            'profile' => $profile,
         ]);
     }
 
