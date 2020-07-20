@@ -72,6 +72,12 @@ class Client
     public function __construct()
     {
         $this->jobs = new ArrayCollection();
+        /**
+         * Doctrine is not supposed to call the constructor when fetching from
+         * the database. This provides a default and allows to only care about
+         * changing updateAt on edits.
+         */
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int

@@ -39,6 +39,7 @@ class AdminNoteType extends AbstractType
             ])
             // ->add('createdAt')
             // ->add('updatedAt')
+            // ->add('files')
         ;
     }
 

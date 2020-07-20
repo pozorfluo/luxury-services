@@ -75,6 +75,22 @@
                 <th>Description</th>
                 <td>{{ profile.description }}</td>
             </tr>
+            {% if is_granted('ROLE_ADMIN') %}
+            <tr>
+                <th>Admin Notes</th>
+                <td>{{ profile.adminNote.content }}</td>
+            </tr>
+            <tr>
+                <th>Admin Files</th>
+                <td>
+                  {% for file in profile.adminNote.files %}
+                    <a href="{{ path('admin_note_download', { filename: file }) }}">
+                      {{ file }}
+                    </a>
+                  {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
             <tr>
                 <th>CreatedAt</th>
                 <td>{{ profile.createdAt ? profile.createdAt|date('Y-m-d H:i:s') : '' }}</td>

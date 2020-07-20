@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Profile;
-use Doctrine\DBAL\Types\DateType;
+use App\Entity\JobSector;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,6 +13,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProfileType extends AbstractType
 {
+    protected $auth;
+    public function __construct(AuthorizationCheckerInterface $auth)
+    {
+        $this->auth = $auth;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -31,13 +39,20 @@ class ProfileType extends AbstractType
             ->add('placeOfBirth')
             ->add('isAvailable')
             ->add('experience')
-            ->add('description')
-            // ->add('createdAt')
-            // ->add('updatedAt')
-            // ->add('deletedAt')
-            // ->add('adminNote')
-            ->add('jobSector')
-        ;
+            ->add('description');
+        // ->add('createdAt')
+        // ->add('updatedAt')
+        // ->add('deletedAt')
+
+        if ($this->auth->isGranted('ROLE_ADMIN')) {
+            $builder->add('jobSector', EntityType::class, [
+                'class' => JobSector::class,
+                'placeholder' => 'Choose a Job Sector',
+            ])
+                ->add('adminNote', AdminNoteType::class, [
+                    'attr' => ['class' => 'form-inline']
+                ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -134,6 +134,11 @@ class Profile
      */
     private $applications;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, mappedBy="profile", cascade={"persist", "remove"})
+     */
+    private $user;
+
     public function __construct()
     {
         $this->applications = new ArrayCollection();
@@ -431,5 +436,23 @@ class Profile
     public function __toString()
     {
         return $this->getFirstName() . $this->getLastName();
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newProfile = null === $user ? null : $this;
+        if ($user->getProfile() !== $newProfile) {
+            $user->setProfile($newProfile);
+        }
+
+        return $this;
     }
 }

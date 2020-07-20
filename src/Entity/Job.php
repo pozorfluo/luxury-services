@@ -86,6 +86,16 @@ class Job
      */
     private $applicants;
 
+    public function __construct()
+    {
+        /**
+         * Doctrine is not supposed to call the constructor when fetching from
+         * the database. This provides a default and allows to only care about
+         * changing updateAt on edits.
+         */
+        $this->createdAt = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -242,6 +252,14 @@ class Job
     {
         return $this->applications;
     }
+
+    // /**
+    //  * @return Collection|application[]
+    //  */
+    // public function getApplicants(): Collection
+    // {
+    //     return $this->applicants;
+    // }
 
     public function addApplications(Application $application): self
     {

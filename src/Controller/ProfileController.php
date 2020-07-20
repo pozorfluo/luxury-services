@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminNote;
 use App\Entity\Profile;
 use App\Form\ProfileType;
 use DateTime;
@@ -10,12 +11,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/profile")
  */
 class ProfileController extends AbstractController
 {
+    use FileUploadTrait;
     /**
      * @Route("/", name="profile_index", methods={"GET"})
      */
@@ -32,6 +36,8 @@ class ProfileController extends AbstractController
     public function new(Request $request): Response
     {
         $profile = new Profile();
+        $profile->setAdminNote(new AdminNote());
+        
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
@@ -39,8 +45,7 @@ class ProfileController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             $now = new DateTime();
-            $profile->setCreatedAt($now)
-                ->setUpdatedAt($now);
+            $profile->setUpdatedAt($now);
 
             $entityManager->persist($profile);
             $entityManager->flush();
@@ -67,17 +72,51 @@ class ProfileController extends AbstractController
     /**
      * @Route("/{id}/edit", name="profile_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Profile $profile): Response
-    {
+    public function edit(
+        Request $request,
+        Profile $profile,
+        SluggerInterface $slugger
+    ): Response {
+        // $formData = [
+        //     'profile' => $profile,
+        //     'adminNote' => $adminNote
+        // ]
+
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            // dd($form);
+            $adminNote = $profile->getAdminNote();
+            /**
+             * @var UploadedFile $file
+             */
+            $file = $form->get('adminNote')->get('file')->getData();
+
+            if ($file) {
+                $filename = $this->saveUpload(
+                    $file,
+                    $this->getParameter('admin_notes_dir'),
+                    $slugger
+                );
+                $adminNote->setFiles([$filename]);
+                $this->addFlash(
+                    'notice',
+                    $filename . ' saved !'
+                );
+            }
+
+            $now = new DateTime();
+            $profile->setUpdatedAt($now);
+            $adminNote->setUpdatedAt($now);
+
+            $entityManager->flush();
 
             return $this->redirectToRoute('profile_index');
         }
 
+        // dd($profile->getAdminNote());
         return $this->render('profile/edit.html.twig', [
             'profile' => $profile,
             'form' => $form->createView(),
@@ -89,7 +128,7 @@ class ProfileController extends AbstractController
      */
     public function delete(Request $request, Profile $profile): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$profile->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $profile->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($profile);
             $entityManager->flush();

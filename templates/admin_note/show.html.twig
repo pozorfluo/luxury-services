@@ -17,7 +17,13 @@
             </tr>
             <tr>
                 <th>Files</th>
-                <td>{{ admin_note.files ? admin_note.files|json_encode : '' }}</td>
+                <td>
+                  {% for file in admin_note.files %}
+                    <a href="{{ path('admin_note_download', { filename: file }) }}">
+                      {{ file }}
+                    </a>
+                  {% endfor %}
+                </td>
             </tr>
             <tr>
                 <th>CreatedAt</th>

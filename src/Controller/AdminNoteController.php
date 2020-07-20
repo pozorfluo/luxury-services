@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/admin/note")
@@ -36,7 +37,6 @@ class AdminNoteController extends AbstractController
      */
     public function new(
         Request $request,
-        ParameterBagInterface $parameterBag,
         SluggerInterface $slugger
     ): Response {
         $adminNote = new AdminNote();
