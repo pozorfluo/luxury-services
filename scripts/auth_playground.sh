@@ -13,3 +13,10 @@ php bin/console make:user
 
 # test password encoding
 php bin/console security:encode-password
+
+# create dummy database users
+composer require orm-fixtures --dev
+php bin/console make:fixtures
+
+# empty database and reload all fixture classes
+php bin/console doctrine:fixtures:load
