@@ -23,3 +23,6 @@ php bin/console doctrine:fixtures:load
 
 # create a new security voter class
 php bin/console make:voter
+
+# generate login form
+php bin/console make:auth
