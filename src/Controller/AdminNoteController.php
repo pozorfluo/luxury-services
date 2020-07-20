@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * @Route("/admin/note")
@@ -57,6 +58,10 @@ class AdminNoteController extends AbstractController
                     $slugger
                 );
                 $adminNote->setFiles([$filename]);
+                $this->addFlash(
+                    'notice',
+                    $filename . ' saved !'
+                );    
             }
 
             $now = new DateTime();
@@ -70,11 +75,7 @@ class AdminNoteController extends AbstractController
                 'success',
                 'Note created !'
             );
-            $this->addFlash(
-                'notice',
-                $file . ' saved !'
-            );
-            
+           
             return $this->redirectToRoute('admin_note_index');
         }
 
@@ -152,10 +153,17 @@ class AdminNoteController extends AbstractController
      */
     public function download(string $filename): Response
     {
-        return $this->streamSavedUpload(
+        // return $this->streamSavedUpload(
+        //     $filename,
+        //     $this->getParameter('admin_notes_dir'),
+        //     false
+        // );
+        return $this->file(
+            rtrim($this->getParameter('admin_notes_dir'), '/\\')
+                . DIRECTORY_SEPARATOR
+                . $filename,
             $filename,
-            $this->getParameter('admin_notes_dir'),
-            false
+            ResponseHeaderBag::DISPOSITION_INLINE
         );
     }
 }

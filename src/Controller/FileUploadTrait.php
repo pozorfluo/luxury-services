@@ -64,24 +64,32 @@ trait FileUploadTrait
             // $this->streamSavedUpload($filename, $directory);
         });
 
-        if($download)
-        {
+        if ($download) {
             /* Tell the client this is a download */
             $disposition  = HeaderUtils::makeDisposition(
                 HeaderUtils::DISPOSITION_ATTACHMENT,
                 $filename
             );
             $response->headers->set('Content-Disposition', $disposition);
-        }else{
+        } else {
             /**
              * Get mime types from extension for files that have been vetoed on
              * the way in( Otherwise use guessMimeType() to inspect the file ).
-            */
+             */
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
             $mimeTypes = new MimeTypes();
             $response->headers->set(
-                'Content-Type', $mimeTypes->getMimeTypes($extension)
+                'Content-Type',
+                $mimeTypes->getMimeTypes($extension)
             );
+
+            /* Tell the client to display file inline */
+            $disposition  = HeaderUtils::makeDisposition(
+                HeaderUtils::DISPOSITION_INLINE,
+                $filename
+            );
+            $response->headers->set('Content-Disposition', $disposition);
         }
         return $response;
     }
