@@ -34,22 +34,24 @@ class ProfileType extends AbstractType
             ->add('picture')
             ->add('currentLocation')
             ->add('dateOfBirth', BirthdayType::class, [
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'required' => 'false'
             ])
             ->add('placeOfBirth')
             ->add('isAvailable')
             ->add('experience')
-            ->add('description');
+            ->add('description')
+            ->add('jobSector', EntityType::class, [
+                'class' => JobSector::class,
+                'placeholder' => 'Choose a Job Sector',
+                'required' => false
+            ]);
         // ->add('createdAt')
         // ->add('updatedAt')
         // ->add('deletedAt')
 
         if ($this->auth->isGranted('ROLE_ADMIN')) {
-            $builder->add('jobSector', EntityType::class, [
-                'class' => JobSector::class,
-                'placeholder' => 'Choose a Job Sector',
-            ])
-                ->add('adminNote', AdminNoteType::class, [
+            $builder->add('adminNote', AdminNoteType::class, [
                     'attr' => ['class' => 'form-inline']
                 ]);
         }

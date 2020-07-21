@@ -33,30 +33,6 @@ class ProfileController extends AbstractController
             'profiles' => $profileRepository->findAll(),
         ]);
     }
-    /**
-     * @Route("/", name="profile_show_user", methods={"GET"})
-     */
-    public function showUser(): Response
-    {
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-
-        // if the user is anonymous, redirect to login form
-        if (!$user instanceof UserInterface) {
-            return $this->redirectToRoute('root');
-        }
-
-        $profile = $user->getProfile();
-        if (!isset($profile)) {
-            $profile = new Profile();
-            return $this->redirectToRoute('profile_new');
-        }
-        // $this->denyAccessUnlessGranted('view', $profile);
-
-        return $this->render('profile/show.html.twig', [
-            'profile' => $profile,
-        ]);
-    }
 
     /**
      * @Route("/new", name="profile_new", methods={"GET","POST"})
@@ -66,6 +42,11 @@ class ProfileController extends AbstractController
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+
+        // Redirect users who already have a profile to edit form
+        if ($user->getProfile() instanceof Profile) {
+            return $this->redirectToRoute('profile_edit');
+        }
 
         $profile = new Profile();
         $profile->setAdminNote(new AdminNote());
@@ -78,6 +59,7 @@ class ProfileController extends AbstractController
 
             $now = new DateTime();
             $profile->setUpdatedAt($now);
+
             $profile->setUser($user);
 
             $entityManager->persist($profile);
@@ -93,6 +75,30 @@ class ProfileController extends AbstractController
     }
 
     /**
+     * @Route("/", name="profile_show_user", methods={"GET"})
+     */
+    public function showUser(): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        // if the user is anonymous, redirect to login form
+        if (!$user instanceof UserInterface) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $profile = $user->getProfile();
+        if (!isset($profile)) {
+            $profile = new Profile();
+            return $this->redirectToRoute('profile_new');
+        }
+        $this->denyAccessUnlessGranted('view', $profile);
+
+        return $this->render('profile/show.html.twig', [
+            'profile' => $profile,
+        ]);
+    }
+    /**
      * @Route("/{id}", name="profile_show", methods={"GET"})
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
@@ -107,10 +113,37 @@ class ProfileController extends AbstractController
             'profile' => $profile,
         ]);
     }
+    /**
+     * @Route("/edit", name="profile_edit_user", methods={"GET","POST"})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     */
+    public function editUser(
+        Request $request,
+        SluggerInterface $slugger
+    ):Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        // if the user is anonymous, redirect to login form
+        if (!$user instanceof UserInterface) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $profile = $user->getProfile();
+
+        if (!isset($profile)) {
+            $profile = new Profile();
+            return $this->redirectToRoute('profile_new');
+        }
+
+        $this->denyAccessUnlessGranted('edit', $profile);
+
+        return $this->edit($request, $profile, $slugger);
+    }
 
     /**
      * @Route("/{id}/edit", name="profile_edit", methods={"GET","POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function edit(
         Request $request,

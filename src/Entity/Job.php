@@ -253,13 +253,13 @@ class Job
         return $this->applications;
     }
 
-    // /**
-    //  * @return Collection|application[]
-    //  */
-    // public function getApplicants(): Collection
-    // {
-    //     return $this->applicants;
-    // }
+    /**
+     * @return Collection|application[]
+     */
+    public function getApplicants(): Collection
+    {
+        return $this->applicants;
+    }
 
     public function addApplications(Application $application): self
     {
