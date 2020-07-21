@@ -113,8 +113,55 @@ class ProfileController extends AbstractController
             'profile' => $profile,
         ]);
     }
+
+    // private function editForm(
+    //     Request $request,
+    //     Profile $profile,
+    //     SluggerInterface $slugger
+    // ) : Response
+    // {
+    //     $form = $this->createForm(ProfileType::class, $profile);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         // dd($form);
+    //         $adminNote = $profile->getAdminNote();
+    //         /**
+    //          * @var UploadedFile $file
+    //          */
+    //         $file = $form->get('adminNote')->get('file')->getData();
+
+    //         if ($file) {
+    //             $filename = $this->saveUpload(
+    //                 $file,
+    //                 $this->getParameter('admin_notes_dir'),
+    //                 $slugger
+    //             );
+    //             $adminNote->setFiles([$filename]);
+    //             $this->addFlash(
+    //                 'notice',
+    //                 $filename . ' saved !'
+    //             );
+    //         }
+
+    //         $now = new DateTime();
+    //         $profile->setUpdatedAt($now);
+    //         $adminNote->setUpdatedAt($now);
+
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('profile_index');
+    //     }
+
+    //     return $this->render('profile/edit.html.twig', [
+    //         'profile' => $profile,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
+
     /**
-     * @Route("/edit", name="profile_edit_user", methods={"GET","POST"})
+     * @Route("/edit", name="profile_edit_user", methods={"GET","POST"}, priority=2)
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function editUser(
@@ -154,7 +201,7 @@ class ProfileController extends AbstractController
         //     'profile' => $profile,
         //     'adminNote' => $adminNote
         // ]
-
+        // return $this->editForm($request, $profile, $slugger);
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
@@ -189,7 +236,6 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('profile_index');
         }
 
-        // dd($profile->getAdminNote());
         return $this->render('profile/edit.html.twig', [
             'profile' => $profile,
             'form' => $form->createView(),
