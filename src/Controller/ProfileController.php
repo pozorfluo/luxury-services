@@ -101,12 +101,14 @@ class ProfileController extends AbstractController
     /**
      * @Route("/{id}", name="profile_show", methods={"GET"})
      * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * 
      */
     public function show(Profile $profile): Response
     {
-        /** @var \App\Entity\User */
-        $user = $this->getUser();
-
+        // /** @var \App\Entity\User */
+        // $user = $this->getUser();
+        
+        // * @IsGranted("VIEW", subject="profile")
         $this->denyAccessUnlessGranted('view', $profile);
 
         return $this->render('profile/show.html.twig', [
