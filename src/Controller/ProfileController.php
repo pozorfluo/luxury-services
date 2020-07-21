@@ -47,7 +47,11 @@ class ProfileController extends AbstractController
         }
 
         $profile = $user->getProfile();
-        $this->denyAccessUnlessGranted('view', $profile);
+        if (!isset($profile)) {
+            $profile = new Profile();
+            return $this->redirectToRoute('profile_new');
+        }
+        // $this->denyAccessUnlessGranted('view', $profile);
 
         return $this->render('profile/show.html.twig', [
             'profile' => $profile,
@@ -56,11 +60,15 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/new", name="profile_new", methods={"GET","POST"})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function new(Request $request): Response
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
         $profile = new Profile();
-        $profile->setAdminNote(new AdminNote());
+        // $profile->setAdminNote(new AdminNote());
 
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
@@ -70,11 +78,12 @@ class ProfileController extends AbstractController
 
             $now = new DateTime();
             $profile->setUpdatedAt($now);
+            $profile->setUser($user);
 
             $entityManager->persist($profile);
             $entityManager->flush();
 
-            return $this->redirectToRoute('profile_index');
+            return $this->redirectToRoute('profile_show_user');
         }
 
         return $this->render('profile/new.html.twig', [

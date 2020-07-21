@@ -24,6 +24,7 @@ class AdminNoteController extends AbstractController
     use FileUploadTrait;
     /**
      * @Route("/", name="admin_note_index", methods={"GET"})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function index(AdminNoteRepository $adminNoteRepository): Response
     {
