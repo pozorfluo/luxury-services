@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
@@ -24,6 +25,8 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $now = new DateTime();
+            $user->setUpdatedAt($now);
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(

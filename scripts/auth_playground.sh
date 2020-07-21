@@ -26,3 +26,6 @@ php bin/console make:voter
 
 # generate login form
 php bin/console make:auth
+
+# generate registration form
+php bin/console make:registration-form

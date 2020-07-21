@@ -68,7 +68,7 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         $profile = new Profile();
-        // $profile->setAdminNote(new AdminNote());
+        $profile->setAdminNote(new AdminNote());
 
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
@@ -94,10 +94,15 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/{id}", name="profile_show", methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function show(Profile $profile): Response
     {
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+
+        $this->denyAccessUnlessGranted('view', $profile);
+
         return $this->render('profile/show.html.twig', [
             'profile' => $profile,
         ]);

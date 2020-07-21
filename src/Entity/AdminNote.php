@@ -44,7 +44,9 @@ class AdminNote
          * the database. This provides a default and allows to only care about
          * changing updateAt on edits.
          */
-        $this->createdAt = new \DateTime();
+        $now = new \DateTime();
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
     }
 
     public function getId(): ?int

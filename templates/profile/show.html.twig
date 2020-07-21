@@ -75,7 +75,7 @@
                 <th>Description</th>
                 <td>{{ profile.description }}</td>
             </tr>
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_ADMIN') and profile.adminNote %}
             <tr>
                 <th>Admin Notes</th>
                 <td>{{ profile.adminNote.content }}</td>

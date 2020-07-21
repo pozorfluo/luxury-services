@@ -29,7 +29,7 @@ class ProfileVoter extends Voter
             self::EDIT,
             self::DELETE
         ])
-            && $subject instanceof User;
+            && $subject instanceof Profile;
     }
 
     protected function voteOnAttribute(
@@ -37,8 +37,7 @@ class ProfileVoter extends Voter
         $subject,
         TokenInterface $token
     ): bool {
-        if($this->security->isGranted('ROLE_ADMIN'))
-        {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
@@ -64,17 +63,17 @@ class ProfileVoter extends Voter
         return false;
     }
 
-    private function canView(Profile $profile, User $user) :bool
+    private function canView(Profile $profile, User $user): bool
     {
         return $user === $profile->getUser();
     }
 
-    private function canEdit(Profile $profile, User $user) :bool
+    private function canEdit(Profile $profile, User $user): bool
     {
         return $user === $profile->getUser();
     }
 
-    private function canDelete(Profile $profile, User $user) :bool
+    private function canDelete(Profile $profile, User $user): bool
     {
         return $user === $profile->getUser();
     }
