@@ -6,7 +6,6 @@ use App\Entity\AdminNote;
 use App\Form\AdminNoteType;
 use App\Repository\AdminNoteRepository;
 use DateTime;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +14,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Routing\RouterInterface;
+
 
 /**
  * @Route("/admin/note")
@@ -33,33 +32,7 @@ class AdminNoteController extends AbstractController
             'admin_notes' => $adminNoteRepository->findAll(),
         ]);
     }
-    /**
-     * Used in dev template, not accessible as a route.
-     */
-    public function dumpRoutes(RouterInterface $router)
-    {
-        // $json = file_get_contents('https://jsonplaceholder.typicode.com/posts/1');
-        // $json = json_decode($json, true);
-        $routes = $router->getRouteCollection()->all();
 
-        $parameterLessRoutes = [];
-        foreach ($routes as $name => $route) {
-            // dump($route->__serialize()['compiled']->getPathVariables());
-            // $compiledRoute = $route->__serialize()['compiled'];
-            // if(isset($compiledRoute) && empty($compiledRoute->getPathVariables()))
-
-            // if(!preg_match('/{|_/m', $route->getPath()))
-            if (!strpos($route->getPath(), '{')) {
-                $parameterLessRoutes[] = $name;
-            }
-        }
-        // dd($parameterLessRoutes);
-        return $this->render('admin_note/routes.html.twig', [
-            'routes' => $parameterLessRoutes,
-            // 'routes' => array_keys($routes),
-            // 'json' => $json
-        ]);
-    }
     /**
      * @Route("/new", name="admin_note_new", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")

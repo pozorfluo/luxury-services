@@ -1,0 +1,12 @@
+<div class="nav-item dropdown" style="position: fixed; bottom:2em; right:0; z-index:4096">
+	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		routes
+	</a>
+	<div class="dropdown-menu bg-dark pt-3" style="z-index: 2000; font-size: 0.7rem;" aria-labelledby="navbarDropdown">
+		{% for route in routes %}
+			<a href="{{ path(route) }}" class="nav-link  py-0 my-0">
+				{{ route }}
+			</a>
+		{% endfor %}
+	</div>
+</div>

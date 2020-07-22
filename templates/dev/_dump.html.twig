@@ -1,0 +1,8 @@
+<details style="position: fixed; bottom:20px; z-index:4096">
+	<summary style="list-style: none;">
+		{{ dump(app.request.get('_controller')) }}
+	</summary>
+	{{ dump(app.request) }}
+</details>
+
+{{ render(controller('App\\Controller\\DevController::dumpRoutes')) }}
