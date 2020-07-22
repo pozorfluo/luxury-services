@@ -25,7 +25,7 @@ class AdminNoteController extends AbstractController
     use FileUploadTrait;
     /**
      * @Route("/", name="admin_note_index", methods={"GET"})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function index(AdminNoteRepository $adminNoteRepository): Response
     {
@@ -43,15 +43,13 @@ class AdminNoteController extends AbstractController
         $routes = $router->getRouteCollection()->all();
 
         $parameterLessRoutes = [];
-        foreach($routes as $name => $route)
-        {
+        foreach ($routes as $name => $route) {
             // dump($route->__serialize()['compiled']->getPathVariables());
             // $compiledRoute = $route->__serialize()['compiled'];
             // if(isset($compiledRoute) && empty($compiledRoute->getPathVariables()))
 
-            // if(!strpos($route->getPath(), '{' ))
-            if(!preg_match('/{|_/m', $route->getPath()))
-            {
+            // if(!preg_match('/{|_/m', $route->getPath()))
+            if (!strpos($route->getPath(), '{')) {
                 $parameterLessRoutes[] = $name;
             }
         }
@@ -64,6 +62,7 @@ class AdminNoteController extends AbstractController
     }
     /**
      * @Route("/new", name="admin_note_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(
         Request $request,
@@ -117,6 +116,7 @@ class AdminNoteController extends AbstractController
 
     /**
      * @Route("/{id}", name="admin_note_show", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function show(AdminNote $adminNote): Response
     {
@@ -127,6 +127,7 @@ class AdminNoteController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="admin_note_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, AdminNote $adminNote): Response
     {
@@ -147,6 +148,7 @@ class AdminNoteController extends AbstractController
 
     /**
      * @Route("/{id}", name="admin_note_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, AdminNote $adminNote): Response
     {
@@ -180,6 +182,7 @@ class AdminNoteController extends AbstractController
      * see https://symfonycasts.com/screencast/symfony-uploads/downloading-private-files#play
      * 
      * @Route("/download/{filename}", name="admin_note_download", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function download(string $filename): Response
     {

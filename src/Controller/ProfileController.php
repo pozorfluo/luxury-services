@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class ProfileController extends AbstractController
 {
     use FileUploadTrait;
+
     /**
      * @Route("/list", name="profile_index", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
@@ -92,22 +93,15 @@ class ProfileController extends AbstractController
             $profile = new Profile();
             return $this->redirectToRoute('profile_new');
         }
-        $this->denyAccessUnlessGranted('view', $profile);
 
-        return $this->render('profile/show.html.twig', [
-            'profile' => $profile,
-        ]);
+        return $this->show($profile);
     }
+
     /**
      * @Route("/{id}", name="profile_show", methods={"GET"})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * 
      */
     public function show(Profile $profile): Response
     {
-        // /** @var \App\Entity\User */
-        // $user = $this->getUser();
-        
         // * @IsGranted("VIEW", subject="profile")
         $this->denyAccessUnlessGranted('view', $profile);
 
@@ -116,60 +110,13 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    // private function editForm(
-    //     Request $request,
-    //     Profile $profile,
-    //     SluggerInterface $slugger
-    // ) : Response
-    // {
-    //     $form = $this->createForm(ProfileType::class, $profile);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager = $this->getDoctrine()->getManager();
-    //         // dd($form);
-    //         $adminNote = $profile->getAdminNote();
-    //         /**
-    //          * @var UploadedFile $file
-    //          */
-    //         $file = $form->get('adminNote')->get('file')->getData();
-
-    //         if ($file) {
-    //             $filename = $this->saveUpload(
-    //                 $file,
-    //                 $this->getParameter('admin_notes_dir'),
-    //                 $slugger
-    //             );
-    //             $adminNote->setFiles([$filename]);
-    //             $this->addFlash(
-    //                 'notice',
-    //                 $filename . ' saved !'
-    //             );
-    //         }
-
-    //         $now = new DateTime();
-    //         $profile->setUpdatedAt($now);
-    //         $adminNote->setUpdatedAt($now);
-
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('profile_index');
-    //     }
-
-    //     return $this->render('profile/edit.html.twig', [
-    //         'profile' => $profile,
-    //         'form' => $form->createView(),
-    //     ]);
-    // }
-
     /**
      * @Route("/edit", name="profile_edit_user", methods={"GET","POST"}, priority=2)
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function editUser(
         Request $request,
         SluggerInterface $slugger
-    ):Response {
+    ): Response {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
@@ -185,14 +132,13 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('profile_new');
         }
 
-        $this->denyAccessUnlessGranted('edit', $profile);
+        // $this->denyAccessUnlessGranted('edit', $profile);
 
         return $this->edit($request, $profile, $slugger);
     }
 
     /**
      * @Route("/{id}/edit", name="profile_edit", methods={"GET","POST"})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function edit(
         Request $request,
@@ -204,6 +150,8 @@ class ProfileController extends AbstractController
         //     'adminNote' => $adminNote
         // ]
         // return $this->editForm($request, $profile, $slugger);
+        $this->denyAccessUnlessGranted('edit', $profile);
+
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
@@ -244,18 +192,23 @@ class ProfileController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/{id}", name="profile_delete", methods={"DELETE"})
-     *  @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Profile $profile): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $profile->getId(), $request->request->get('_token'))) {
+        // $this->denyAccessUnlessGranted('delete', $profile);
+
+        if ($this->isCsrfTokenValid(
+            'delete' . $profile->getId(),
+            $request->request->get('_token')
+        )) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($profile);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('profile_index');
+        return $this->redirectToRoute('profile_new');
     }
 }

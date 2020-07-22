@@ -31,3 +31,6 @@ php bin/console make:migration
 
 # run migration
 php bin/console doctrine:migrations:migrate
+
+# empty database and reload all fixture classes
+php bin/console doctrine:fixtures:load

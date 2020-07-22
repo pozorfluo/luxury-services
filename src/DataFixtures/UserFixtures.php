@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Profile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -23,9 +24,16 @@ class UserFixtures extends Fixture
 
         $user->setPassword($this->passwordEncoder->encodePassword(
             $user,
-            '!dummy_password!'
+            'azertyui'
         ));
         $user->setUpdatedAt($user->getCreatedAt());
+        $profile = new Profile();
+        $profile->setFirstName('Moula')
+            ->setLastName('Ga');
+        $user->setProfile($profile);
+        $manager->persist($user);
+        $manager->persist($profile);
+
 
         $admin = new User();
         $admin->setEmail('admin@luxury-service.com');
@@ -37,7 +45,6 @@ class UserFixtures extends Fixture
         $admin->setUpdatedAt($user->getCreatedAt());
 
         $manager->persist($admin);
-        $manager->persist($user);
         $manager->flush();
     }
 }
