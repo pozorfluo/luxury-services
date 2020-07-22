@@ -135,7 +135,8 @@ class Profile
     private $applications;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, mappedBy="profile", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="profile")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
@@ -451,15 +452,9 @@ class Profile
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
-
-        // set (or unset) the owning side of the relation if necessary
-        $newProfile = null === $user ? null : $this;
-        if ($user->getProfile() !== $newProfile) {
-            $user->setProfile($newProfile);
-        }
 
         return $this;
     }

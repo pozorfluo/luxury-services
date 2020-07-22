@@ -36,11 +36,6 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Profile::class, inversedBy="user")
-     */
-    private $profile;
-
         /**
      * @ORM\Column(type="datetime")
      */
@@ -51,6 +46,11 @@ class User implements UserInterface
      */
     private $updatedAt;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Profile::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $profile;
+
     public function __construct()
     {
         /**
@@ -58,9 +58,7 @@ class User implements UserInterface
          * the database. This provides a default and allows to only care about
          * changing updateAt on edits.
          */
-        $now = new \DateTime();
-        $this->createdAt = $now;
-        $this->updatedAt = $now;
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -140,19 +138,7 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
-    public function getProfile(): ?Profile
-    {
-        return $this->profile;
-    }
-
-    public function setProfile(?Profile $profile): self
-    {
-        $this->profile = $profile;
-
-        return $this;
-    }
-
+    
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -173,6 +159,23 @@ class User implements UserInterface
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile): self
+    {
+        $this->profile = $profile;
+
+        // set the owning side of the relation if necessary
+        if ($profile->getUser() !== $this) {
+            $profile->setUser($this);
+        }
 
         return $this;
     }
