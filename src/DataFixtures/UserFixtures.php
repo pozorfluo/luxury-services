@@ -26,7 +26,6 @@ class UserFixtures extends Fixture
             $user,
             'azertyui'
         ));
-        $user->setUpdatedAt($user->getCreatedAt());
         $profile = new Profile();
         $profile->setFirstName('Moula')
             ->setLastName('Ga');
@@ -42,9 +41,20 @@ class UserFixtures extends Fixture
             $admin,
             '!dummy_password!'
         ));
-        $admin->setUpdatedAt($user->getCreatedAt());
 
         $manager->persist($admin);
+
+        $dev = new User();
+        $dev->setEmail('d@ve.com');
+        $dev->setRoles(['ROLE_ADMIN', 'ROLE_DEV']);
+        $dev->setPassword($this->passwordEncoder->encodePassword(
+            $dev,
+            'devazerty'
+        ));
+
+        $manager->persist($dev);
+
+
         $manager->flush();
     }
 }
