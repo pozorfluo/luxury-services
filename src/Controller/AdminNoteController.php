@@ -10,18 +10,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
+use App\Service\FileUpload;
 
 /**
  * @Route("/admin/note")
  */
 class AdminNoteController extends AbstractController
 {
-    use FileUploadTrait;
     /**
      * @Route("/", name="admin_note_index", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
@@ -37,10 +35,8 @@ class AdminNoteController extends AbstractController
      * @Route("/new", name="admin_note_new", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function new(
-        Request $request,
-        SluggerInterface $slugger
-    ): Response {
+    public function new(Request $request, FileUpload $fileUpload): Response
+    {
         $adminNote = new AdminNote();
         $form = $this->createForm(AdminNoteType::class, $adminNote);
         $form->handleRequest($request);
@@ -54,10 +50,9 @@ class AdminNoteController extends AbstractController
             $file = $form->get('file')->getData();
 
             if ($file) {
-                $filename = $this->saveUpload(
+                $filename = $fileUpload->save(
                     $file,
-                    $this->getParameter('admin_notes_dir'),
-                    $slugger
+                    $this->getParameter('admin_notes_dir')
                 );
                 $adminNote->setFiles([$filename]);
                 $this->addFlash(
@@ -102,13 +97,36 @@ class AdminNoteController extends AbstractController
      * @Route("/{id}/edit", name="admin_note_edit", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function edit(Request $request, AdminNote $adminNote): Response
-    {
+    public function edit(
+        Request $request,
+        AdminNote $adminNote,
+        FileUpload $fileUpload
+    ): Response {
         $form = $this->createForm(AdminNoteType::class, $adminNote);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            /**
+             * @var UploadedFile $file
+             */
+            $file = $form->get('file')->getData();
+
+            if ($file) {
+                $filename = $fileUpload->save(
+                    $file,
+                    $this->getParameter('admin_notes_dir')
+                );
+                $adminNote->setFiles([$filename]);
+                $this->addFlash(
+                    'notice',
+                    $filename . ' saved !'
+                );
+            }
+            $adminNote->setUpdatedAt(new DateTime());
+            $entityManager->persist($adminNote);
+            $entityManager->flush();
+
 
             return $this->redirectToRoute('admin_note_index');
         }
@@ -123,8 +141,11 @@ class AdminNoteController extends AbstractController
      * @Route("/{id}", name="admin_note_delete", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, AdminNote $adminNote): Response
-    {
+    public function delete(
+        Request $request,
+        AdminNote $adminNote,
+        FileUpload $fileUpload
+    ): Response {
         if ($this->isCsrfTokenValid(
             'delete' . $adminNote->getId(),
             $request->request->get('_token')
@@ -135,7 +156,7 @@ class AdminNoteController extends AbstractController
 
 
             foreach ($adminNote->getFiles() as $filename) {
-                $this->deleteSavedUpload(
+                $fileUpload->deleteSaved(
                     $filename,
                     $this->getParameter('admin_notes_dir')
                 );
@@ -159,7 +180,7 @@ class AdminNoteController extends AbstractController
      */
     public function download(string $filename): Response
     {
-        // return $this->streamSavedUpload(
+        // return $fileUpload->streamSaved(
         //     $filename,
         //     $this->getParameter('admin_notes_dir'),
         //     false

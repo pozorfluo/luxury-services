@@ -17,13 +17,15 @@ class DevController extends AbstractController
             'controller_name' => 'DevController',
         ]);
     }
-    
+
     /**
      * not accessible as a route.
      */
     public function dumpRoutes(RouterInterface $router)
     {
+        
         $routes = $router->getRouteCollection()->all();
+        dump($routes);
 
         $parameterLessRoutes = [];
         foreach ($routes as $name => $route) {
@@ -35,6 +37,7 @@ class DevController extends AbstractController
                 $parameterLessRoutes[] = $name;
             }
         }
+
         return $this->render('dev/_routes.html.twig', [
             'routes' => $parameterLessRoutes,
         ]);

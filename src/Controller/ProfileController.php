@@ -15,15 +15,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
+use App\Service\FileUpload;
 
 /**
  * @Route("/profile")
  */
 class ProfileController extends AbstractController
 {
-    use FileUploadTrait;
-
     /**
      * @Route("/list", name="profile_index", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
@@ -143,7 +141,8 @@ class ProfileController extends AbstractController
     public function edit(
         Request $request,
         Profile $profile,
-        SluggerInterface $slugger
+        SluggerInterface $slugger,
+        FileUpload $fileUpload
     ): Response {
         // $formData = [
         //     'profile' => $profile,
@@ -157,7 +156,6 @@ class ProfileController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            // dd($form);
             $adminNote = $profile->getAdminNote();
             /**
              * @var UploadedFile $file
@@ -165,7 +163,7 @@ class ProfileController extends AbstractController
             $file = $form->get('adminNote')->get('file')->getData();
 
             if ($file) {
-                $filename = $this->saveUpload(
+                $filename = $fileUpload->save(
                     $file,
                     $this->getParameter('admin_notes_dir'),
                     $slugger

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Service;
 
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -10,19 +10,25 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\Mime\MimeTypes;
 
-trait FileUploadTrait
+class FileUpload
 {
-    private function saveUpload(
+    private $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
+
+    public function save(
         UploadedFile $file,
-        string $directory,
-        SluggerInterface $slugger
+        string $directory
     ): string {
         $client_filename = pathinfo(
             $file->getClientOriginalName(),
             PATHINFO_FILENAME
         );
 
-        $filename = $slugger->slug($client_filename)
+        $filename = $this->slugger->slug($client_filename)
             . '_'
             . bin2hex(random_bytes(12))
             . '.'
@@ -38,7 +44,7 @@ trait FileUploadTrait
         return $filename;
     }
 
-    private function deleteSavedUpload(
+    public function deleteSaved(
         string $filename,
         string $directory
     ): bool {
@@ -47,7 +53,7 @@ trait FileUploadTrait
         );
     }
 
-    private function streamSavedUpload(
+    public function streamSaved(
         string $filename,
         string $directory,
         bool $download = true
