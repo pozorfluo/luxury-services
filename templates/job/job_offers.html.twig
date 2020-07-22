@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %} {% block title %}Job Offers{% endblock %} {%
+block body %}
+<h1>Job Offers</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for job_sector in job_sectors %}
+    <tr>
+      <td>{{ job_sector.id }}</td>
+      <td>{{ job_sector.name }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="3">no records found</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Title</th>
+      <th>ClosingDate</th>
+      <th>Salary</th>
+      <th>Location</th>
+      <th>Description</th>
+      <th>IsActive</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for job in jobs %}
+    <tr>
+      <td>{{ job.id }}</td>
+      <td>{{ job.title }}</td>
+      <td>{{ job.closingDate ? job.closingDate|date('Y-m-d') : '' }}</td>
+      <td>{{ job.salary }}</td>
+      <td>{{ job.location }}</td>
+      <td>{{ job.description }}</td>
+      <td>{{ job.isActive ? "Yes" : "No" }}</td>
+      <td>{{ job.type }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="11">no records found</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
