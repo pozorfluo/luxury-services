@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Application;
+use App\Entity\Profile;
+use App\Service\DevLog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +21,25 @@ class ApplicationRepository extends ServiceEntityRepository
         parent::__construct($registry, Application::class);
     }
 
-    // /**
-    //  * @return Application[] Returns an array of Application objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findAllByProfile(Profile $profile): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $conn = $this->getEntityManager()
+            ->getConnection();
 
-    /*
-    public function findOneBySomeField($value): ?Application
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $dev = new DevLog($conn);
+
+        $stmt = $conn->prepare(
+            'SELECT
+                 `job_id`,
+                 `profile_id`
+             FROM
+                 `application`
+             WHERE
+                 `profile_id` = ?;'
+        );
+
+        $stmt->execute([$profile->getId()]);
+
+        return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
-    */
 }

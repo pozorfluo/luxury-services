@@ -54,12 +54,10 @@ class JobController extends AbstractController
         $profile = $user->getProfile();
         $applications = [];
         if (isset($profile)) {
-            $applications = $profile->getApplications()->getValues();
-            // $applications = $applicationRepository->findBy(
-            //     ['profile' => $profile->getId()],
-            //     null,
-            //     null
-            // );
+            // $applications = $profile->getApplications()->getValues();
+            $applications = $applicationRepository->findAllByProfile(
+               $profile
+            );
         }
 
 
@@ -67,9 +65,7 @@ class JobController extends AbstractController
         $jobSectors = $jobSectorRepository->findAll();
 
 
-        $devlog = new DevLog();
-        $devlog->log('$applications', $applications);
-        dump($applications);
+        $dev = new DevLog($applications);
         // $devlog->log('$applications flipped', array_flip($applications));
         // $devlog->log('$jobSectors', $jobSectors);
 
