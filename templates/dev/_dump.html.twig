@@ -1,9 +1,41 @@
-{% dump app.request %}
-<details style="position: fixed; bottom:20px; z-index:4096">
+{# {% dump app.request.attributes.get('_route') %}
+{% dump app.request.attributes.get('_route_params') %} #}
+{# <details class="text-primary" style="position: fixed; bottom:36px; z-index:4096; padding: 0.rem; font-size: 0.75rem;">
+	<summary style="background-color:#222222">
+		routes
+	</summary>
+	{% for key, route in devlog.getRoutes() %}
+		<details>
+			<summary style="">
+				{{ key }}
+			</summary>
+			{{ dump(route) }}
+		</details>
+	{% endfor %}
+</details> #}
+
+
+<details open="true" class="text-light" style="position: fixed; bottom:36px; z-index:4096; padding: 0.25rem 2rem; font-size: 0.75rem; background-color:#222222;">
+	<summary>
+		DevLog
+	</summary>
+    {# {{ dump(devlog.getData()) }} #}
+	{% for key, variable in devlog.getData() %}
+		<details open="true"> 
+			<summary>
+				{{ key }}
+			</summary>
+			{{ variable|raw }}
+		</details>
+	{% endfor %}
+</details>
+
+{# {% dump app.request %} #}
+{# <details style="position: fixed; bottom:20px; z-index:4096">
 	<summary style="list-style: none;">
 		{{ dump(app.request.get('_controller')) }}
 	</summary>
 	{{ dump(app.request) }}
-</details>
+</details> #}
 
 {{ render(controller('App\\Controller\\DevController::dumpRoutes')) }}

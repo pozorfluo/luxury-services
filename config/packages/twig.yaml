@@ -3,3 +3,4 @@ twig:
 
     globals:
         admin_notes_dir: '%admin_notes_dir%'
+        devlog: '@App\Service\DevLog'

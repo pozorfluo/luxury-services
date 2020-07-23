@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Service\FileUpload;
+use App\Service\DevLog;
 
 /**
  * @Route("/admin/note")
@@ -26,6 +27,10 @@ class AdminNoteController extends AbstractController
      */
     public function index(AdminNoteRepository $adminNoteRepository): Response
     {
+        $devLog = new DevLog();
+        $devLog->log('admin_note_index',['mlskdf', 2, 'sqfd', ['poiop' => 'popopo']] );
+        $devLog->log('admin_note_index', $adminNoteRepository );
+
         return $this->render('admin_note/index.html.twig', [
             'admin_notes' => $adminNoteRepository->findAll(),
         ]);
@@ -60,10 +65,6 @@ class AdminNoteController extends AbstractController
                     $filename . ' saved !'
                 );
             }
-
-            $now = new DateTime();
-            $adminNote->setCreatedAt($now)
-                ->setUpdatedAt($now);
 
             $entityManager->persist($adminNote);
             $entityManager->flush();

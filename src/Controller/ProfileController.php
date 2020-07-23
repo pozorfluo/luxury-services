@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Service\FileUpload;
@@ -37,7 +36,7 @@ class ProfileController extends AbstractController
      * @Route("/new", name="profile_new", methods={"GET","POST"})
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, FileUpload $fileUpload): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -56,8 +55,27 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            $now = new DateTime();
-            $profile->setUpdatedAt($now);
+            /**
+             * @var UploadedFile $file
+             */
+            $file = $form->get('adminNote')->get('file')->getData();
+
+            if ($file) {
+                $filename = $fileUpload->save(
+                    $file,
+                    $this->getParameter('admin_notes_dir')
+                );
+                $profile->getAdminNote()->setFiles([$filename]);
+                $this->addFlash(
+                    'notice',
+                    $filename . ' saved !'
+                );
+
+                $this->addFlash(
+                    'success',
+                    'Note created !'
+                );
+            }
 
             $profile->setUser($user);
 
@@ -111,10 +129,8 @@ class ProfileController extends AbstractController
     /**
      * @Route("/edit", name="profile_edit_user", methods={"GET","POST"}, priority=2)
      */
-    public function editUser(
-        Request $request,
-        SluggerInterface $slugger
-    ): Response {
+    public function editUser(Request $request, FileUpload $fileUpload): Response
+    {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
@@ -132,7 +148,7 @@ class ProfileController extends AbstractController
 
         // $this->denyAccessUnlessGranted('edit', $profile);
 
-        return $this->edit($request, $profile, $slugger);
+        return $this->edit($request, $profile, $fileUpload);
     }
 
     /**
@@ -141,7 +157,6 @@ class ProfileController extends AbstractController
     public function edit(
         Request $request,
         Profile $profile,
-        SluggerInterface $slugger,
         FileUpload $fileUpload
     ): Response {
         // $formData = [
@@ -165,8 +180,7 @@ class ProfileController extends AbstractController
             if ($file) {
                 $filename = $fileUpload->save(
                     $file,
-                    $this->getParameter('admin_notes_dir'),
-                    $slugger
+                    $this->getParameter('admin_notes_dir')
                 );
                 $adminNote->setFiles([$filename]);
                 $this->addFlash(

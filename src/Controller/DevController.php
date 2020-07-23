@@ -25,7 +25,7 @@ class DevController extends AbstractController
     {
         
         $routes = $router->getRouteCollection()->all();
-        dump($routes);
+        // dump($routes);
 
         $parameterLessRoutes = [];
         foreach ($routes as $name => $route) {
