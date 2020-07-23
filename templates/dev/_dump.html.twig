@@ -1,6 +1,6 @@
 {# {% dump app.request.attributes.get('_route') %}
 {% dump app.request.attributes.get('_route_params') %} #}
-{# <details class="text-primary" style="position: fixed; bottom:36px; z-index:4096; padding: 0.rem; font-size: 0.75rem;">
+{# <details class="text-primary" style="position: fixed; bottom:36px; z-index:4096; padding: 0.rem; font-size: 0.75rem; opacity: 0.5;">
 	<summary style="background-color:#222222">
 		routes
 	</summary>
@@ -15,13 +15,13 @@
 </details> #}
 
 
-<details open="true" class="text-light" style="position: fixed; bottom:36px; z-index:4096; padding: 0.25rem 2rem; font-size: 0.75rem; background-color:#222222;">
+<details open="true" class="text-light" style="position: fixed; bottom:36px; z-index:4096; padding: 0.25rem 2rem; font-size: 0.75rem; background-color:#22222282;">
 	<summary>
 		DevLog
 	</summary>
     {# {{ dump(devlog.getData()) }} #}
 	{% for key, variable in devlog.getData() %}
-		<details open="true"> 
+		<details open="true" style="background-color:#22222282;"> 
 			<summary>
 				{{ key }}
 			</summary>

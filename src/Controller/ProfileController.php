@@ -100,7 +100,7 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         // if the user is anonymous, redirect to login form
-        if (!$user instanceof UserInterface) {
+        if (!($user instanceof UserInterface)) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -135,7 +135,7 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         // if the user is anonymous, redirect to login form
-        if (!$user instanceof UserInterface) {
+        if (!($user instanceof UserInterface)) {
             return $this->redirectToRoute('app_login');
         }
 

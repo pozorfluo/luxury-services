@@ -3,17 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Job;
-use App\Entity\JobSector;
 use App\Entity\Application;
 use App\Form\JobType;
 use DateTime;
 use App\Repository\JobRepository;
+use App\Repository\JobSectorRepository;
 use App\Service\DevLog;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/job")
@@ -34,10 +35,21 @@ class JobController extends AbstractController
     /**
      * @Route("/", name="job_offers", methods={"GET"})
      */
-    public function jobOffers(JobRepository $jobRepository): Response
-    {
-        $jobs = [new Job()];
-        $jobSectors = [new JobSector()];
+    public function jobOffers(
+        JobRepository $jobRepository,
+        JobSectorRepository $jobSectorRepository
+    ): Response {
+
+        $user = $this->getUser();
+
+        // if the user is anonymous, redirect to login form
+        if (!($user instanceof UserInterface)) {
+            return $this->redirectToRoute('app_login');
+        }
+
+
+        $jobs = $jobRepository->findBy([], null, 3);
+        $jobSectors = $jobSectorRepository->findAll();
         $applications = [(new Application())->setJob(new Job())];
 
         $devlog = new DevLog();
