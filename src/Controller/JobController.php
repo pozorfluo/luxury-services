@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Job;
 use App\Entity\Application;
 use App\Form\JobType;
+use App\Repository\ApplicationRepository;
 use DateTime;
 use App\Repository\JobRepository;
 use App\Repository\JobSectorRepository;
@@ -37,7 +38,8 @@ class JobController extends AbstractController
      */
     public function jobOffers(
         JobRepository $jobRepository,
-        JobSectorRepository $jobSectorRepository
+        JobSectorRepository $jobSectorRepository,
+        ApplicationRepository $applicationRepository
     ): Response {
 
         /** @var \App\Entity\User $user */
@@ -48,21 +50,27 @@ class JobController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        
+
         $profile = $user->getProfile();
         $applications = [];
-        if(isset($profile))
-        {
-            $applications = $profile->getApplications();
+        if (isset($profile)) {
+            $applications = $profile->getApplications()->getValues();
+            // $applications = $applicationRepository->findBy(
+            //     ['profile' => $profile->getId()],
+            //     null,
+            //     null
+            // );
         }
-        
 
-        $jobs = $jobRepository->findBy([], null, 100);
+
+        $jobs = $jobRepository->findBy(['isActive' => true], null, 100);
         $jobSectors = $jobSectorRepository->findAll();
-        
 
-        // $devlog = new DevLog();
-        // $devlog->log('$jobs', $jobs);
+
+        $devlog = new DevLog();
+        $devlog->log('$applications', $applications);
+        dump($applications);
+        // $devlog->log('$applications flipped', array_flip($applications));
         // $devlog->log('$jobSectors', $jobSectors);
 
         return $this->render('job/job_offers.html.twig', [

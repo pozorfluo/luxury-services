@@ -43,7 +43,7 @@ class AdminNoteController extends AbstractController
         $devLog = new DevLog();
         $devLog->log('before', $adminNote);
 
-        dump($adminNote);
+        // dump($adminNote);
         $form = $this->createForm(AdminNoteType::class, $adminNote);
         $form->handleRequest($request);
         $adminNote->setContent('something new !');

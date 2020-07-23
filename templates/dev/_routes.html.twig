@@ -1,12 +1,42 @@
-<div class="nav-item dropdown" style="position: fixed; bottom:2em; right:0; z-index:4096">
-	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		routes
-	</a>
-	<div class="dropdown-menu bg-dark pt-3" style="z-index: 2000; font-size: 0.7rem;" aria-labelledby="navbarDropdown">
-		{% for route in routes %}
-			<a href="{{ path(route) }}" class="nav-link  py-0 my-0">
-				{{ route }}
-			</a>
-		{% endfor %}
-	</div>
+<a
+  href="/"
+  style="
+    position: fixed;
+    bottom: 40px;
+    right: 7.5rem;
+    z-index: 4096;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #007bff;
+    line-height: 1.5;
+  "
+>
+  admin
+</a>
+<div
+  class="nav-item dropdown"
+  style="position: fixed; bottom: 32px; right: 0; z-index: 4096;"
+>
+  <a
+    class="nav-link dropdown-toggle"
+    href="#"
+    id="navbarDropdown"
+    role="button"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    routes
+  </a>
+  <div
+    class="dropdown-menu bg-dark pt-3"
+    style="z-index: 2000; font-size: 0.7rem;"
+    aria-labelledby="navbarDropdown"
+  >
+    {% for route in routes %}
+    <a href="{{ path(route) }}" class="nav-link py-0 my-0">
+      {{ route }}
+    </a>
+    {% endfor %}
+  </div>
 </div>
