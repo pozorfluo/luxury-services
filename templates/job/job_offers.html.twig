@@ -2,6 +2,27 @@
 block body %}
 <h1>Job Offers</h1>
 
+<h2>User Applications</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for application in applications %}
+    <tr>
+      <td>{{ application.job.id }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="11">no records found</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Job Sectors</h2>
 <table class="table">
   <thead>
     <tr>
@@ -23,6 +44,7 @@ block body %}
   </tbody>
 </table>
 
+<h2>Jobs</h2>
 <table class="table">
   <thead>
     <tr>

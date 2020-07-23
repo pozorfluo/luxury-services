@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Job;
 use App\Entity\JobSector;
+use App\Entity\Application;
 use App\Form\JobType;
 use DateTime;
 use App\Repository\JobRepository;
@@ -37,21 +38,16 @@ class JobController extends AbstractController
     {
         $jobs = [new Job()];
         $jobSectors = [new JobSector()];
+        $applications = [(new Application())->setJob(new Job())];
 
         $devlog = new DevLog();
         $devlog->log('$jobs', $jobs);
-        
-        $jobs = new Job();
-        $devlog->log('$jobs pas dans un tableau', $jobs);
-        
-        
-        $jobs = [new Job(), new Job(), new Job(), new Job()];
-        $devlog->log('$jobs plusieurs dans un tableau', $jobs);
         $devlog->log('$jobSectors', $jobSectors);
 
         return $this->render('job/job_offers.html.twig', [
             'jobs' => $jobs,
-            'job_sectors' => $jobSectors
+            'job_sectors' => $jobSectors,
+            'applications' => $applications
         ]);
     }
 
@@ -113,7 +109,7 @@ class JobController extends AbstractController
         ]);
     }
 
-    /**
+    /** 
      * @Route("/{id}", name="job_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Job $job): Response
