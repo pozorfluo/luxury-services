@@ -27,10 +27,6 @@ class AdminNoteController extends AbstractController
      */
     public function index(AdminNoteRepository $adminNoteRepository): Response
     {
-        $devLog = new DevLog();
-        $devLog->log('admin_note_index',['mlskdf', 2, 'sqfd', ['poiop' => 'popopo']] );
-        $devLog->log('admin_note_index', $adminNoteRepository );
-
         return $this->render('admin_note/index.html.twig', [
             'admin_notes' => $adminNoteRepository->findAll(),
         ]);
@@ -43,6 +39,13 @@ class AdminNoteController extends AbstractController
     public function new(Request $request, FileUpload $fileUpload): Response
     {
         $adminNote = new AdminNote();
+
+        $devLog = new DevLog();
+        $devLog->log('before', $adminNote);
+
+        $adminNote->setContent('something new !');
+        $devLog->log('after', $adminNote);
+
         $form = $this->createForm(AdminNoteType::class, $adminNote);
         $form->handleRequest($request);
 
