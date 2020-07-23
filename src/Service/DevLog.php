@@ -27,7 +27,7 @@ class DevLog
     /**
      * @var array <string, mixed>[] [$field_name => $value]
      */
-    public static $data;
+    private static $data;
     private static $cloner;
     private static $dumper;
 
