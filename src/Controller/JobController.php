@@ -40,6 +40,7 @@ class JobController extends AbstractController
         JobSectorRepository $jobSectorRepository
     ): Response {
 
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         // if the user is anonymous, redirect to login form
@@ -47,14 +48,22 @@ class JobController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        
+        $profile = $user->getProfile();
+        $applications = [];
+        if(isset($profile))
+        {
+            $applications = $profile->getApplications();
+        }
+        
 
-        $jobs = $jobRepository->findBy([], null, 3);
+        $jobs = $jobRepository->findBy([], null, 100);
         $jobSectors = $jobSectorRepository->findAll();
-        $applications = [(new Application())->setJob(new Job())];
+        
 
-        $devlog = new DevLog();
-        $devlog->log('$jobs', $jobs);
-        $devlog->log('$jobSectors', $jobSectors);
+        // $devlog = new DevLog();
+        // $devlog->log('$jobs', $jobs);
+        // $devlog->log('$jobSectors', $jobSectors);
 
         return $this->render('job/job_offers.html.twig', [
             'jobs' => $jobs,
