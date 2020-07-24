@@ -1,52 +1,138 @@
-{% extends 'base.html.twig' %} {% block title %}Profile index{% endblock %} {%
-block body %}
-<h1>Profile index</h1>
-<a href="{{ path('profile_new') }}"class="btn btn-success btn-sm">Create new</a>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>FirstName</th>
-      <th>LastName</th>
-      <th>HasPassport</th>
-      <th>CurrentLocation</th>
-      <th>DateOfBirth</th>
-      <th>IsAvailable</th>
-      <th>Experience</th>
-      <th>actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for profile in profiles %}
-    <tr>
-      <td>{{ profile.id }}</td>
-      <td>{{ profile.firstName }}</td>
-      <td>{{ profile.lastName }}</td>
-      <td>{{ profile.hasPassport ? "Yes" : "No" }}</td>
-      <td>{{ profile.currentLocation }}</td>
-      <td>
-        {{ profile.dateOfBirth ? profile.dateOfBirth|date('Y-m-d') : '' }}
-      </td>
-      <td>{{ profile.isAvailable ? "Yes" : "No" }}</td>
-      <td>
-        {{
-          profile.experience
-            ? profile.experience.format("%y year(s), %m month(s), %d day(s)")
-            : ""
-        }}
-      </td>
-      <td>
-        <a href="{{ path('profile_show', { id: profile.id }) }}"class="btn btn-primary btn-sm btn-block">show</a>
-        <a href="{{ path('profile_edit', { id: profile.id }) }}"class="btn btn-secondary btn-sm btn-block">edit</a>
-        {{ include("profile/_delete_form.html.twig") }}
-      </td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="21">no records found</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% extends 'base.html.twig' %}
+{% block title %}Profile index{% endblock %}
+{%block body %}
+	<style>
+table {
+  /* border: 1px solid #ccc; */
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table caption {
+  font-size: 1.5em;
+  margin: 0.5em 0 0.75em;
+}
+
+table tr {
+  padding: 0.35em;
+}
+
+table th,
+table td {
+  padding: 0.625em;
+  text-align: center;
+}
+
+table th {
+  font-size: 0.85em;
+  /* letter-spacing: 0.1em;
+  text-transform: uppercase; */
+}
+
+/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+@media only screen and (max-width: 760px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    margin: 0 0 1rem 0;
+  }
+
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    /* border-bottom: 1px solid #eee; */
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  /*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+  td::before {
+    content: attr(data-label);
+  }
+}
+
+	</style>
+    
+    <h1>Profile index</h1>
+	<a href="{{ path('profile_new') }}" class="btn btn-success btn-sm">Create new</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th >Id</th>
+				<th >FirstName</th>
+				<th >LastName</th>
+				<th >HasPassport</th>
+				<th >CurrentLocation</th>
+				<th >DateOfBirth</th>
+				<th >IsAvailable</th>
+				<th >Experience</th>
+				<th ></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for profile in profiles %}
+				<tr>
+					<td data-label="id">{{ profile.id ?? "-" }}</td>
+					<td data-label="FirstName">{{ profile.firstName ?? "-" }}</td>
+					<td data-label="LastName">{{ profile.lastName ?? "-" }}</td>
+					<td data-label="HasPassport">{{ profile.hasPassport ? "Yes" : "No" }}</td>
+					<td data-label="CurrentLocation">{{ profile.currentLocation ?? "-" }}</td>
+					<td data-label="DateOfBirth">
+						{{ profile.dateOfBirth ? profile.dateOfBirth|date('Y-m-d') : '-' }}
+					</td>
+					<td data-label="IsAvailable">{{ profile.isAvailable ? "Yes" : "No" }}</td>
+					<td data-label="Experience">
+						{{ profile.experience ? profile.experience.format("%y year(s), %m month(s), %d day(s)") : "-" }}
+					</td>
+					<td data-label="">
+						<a href="{{ path('profile_show', { id: profile.id }) }}" class="btn btn-primary btn-sm btn-block">show</a>
+						<a href="{{ path('profile_edit', { id: profile.id }) }}" class="btn btn-secondary btn-sm btn-block">edit</a>
+						{{ include("profile/_delete_form.html.twig") }}
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="21">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
 {% endblock %}

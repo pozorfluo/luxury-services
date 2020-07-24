@@ -50,7 +50,10 @@ class ProfileType extends AbstractType
                             . 'Allowed mime types are {{ types }}.',
                     ])
                 ],
-                'attr' => ['class' => 'form-inline']
+                'attr' => [
+                    'class' => 'form-inline',
+                    'placeholder' => 'Select a passport scan.'
+                    ]
             ])
             ->add('curriculumVitae', FileType::class, [
                 'label' => 'CV : Upload an image or PDF document.',
@@ -115,8 +118,8 @@ class ProfileType extends AbstractType
 
         if ($this->auth->isGranted('ROLE_ADMIN')) {
             $builder->add('adminNote', AdminNoteType::class, [
-                    'attr' => ['class' => 'form-inline']
-                ]);
+                'attr' => ['class' => 'form-inline']
+            ]);
         }
     }
 
