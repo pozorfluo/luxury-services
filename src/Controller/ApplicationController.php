@@ -90,7 +90,10 @@ class ApplicationController extends AbstractController
      */
     public function delete(Request $request, Application $application): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$application->getProfile(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid(
+            'delete' . $application->getProfile(),
+            $request->request->get('_token')
+        )) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($application);
             $entityManager->flush();

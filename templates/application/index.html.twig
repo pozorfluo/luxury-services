@@ -1,33 +1,38 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Application index{% endblock %}
-
+{% extends 'base.html.twig' %} {% block title %}Application index{% endblock %}
 {% block body %}
-    <h1>Application index</h1>
+<h1>Application index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for application in applications %}
-            <tr>
-                <td>{{ application.createdAt ? application.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('application_show', {'profile': application.profile}) }}">show</a>
-                    <a href="{{ path('application_edit', {'profile': application.profile}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="2">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('application_new') }}">Create new</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th>CreatedAt</th>
+      <th>Applicant</th>
+      <th>Job</th>
+      <th>actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for application in applications %}
+    <tr>
+      <td>
+        {{ application.createdAt ? application.createdAt|date('Y-m-d H:i:s') : '' }}
+      </td>
+      <td>
+        {{ application.profile.firstname }} {{ application.profile.lastname }}
+      </td>
+      <td>
+        ref. {{ application.job.id }} {{ application.job.title }}
+      </td>
+      <td>
+        {{ include("application/_delete_form.html.twig") }}
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="2">no records found</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ path('application_new') }}">Create new</a>
 {% endblock %}
