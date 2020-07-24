@@ -7,7 +7,12 @@
 
     {{ include('job_sector/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('job_sector_index') }}"class="btn btn-light btn-lg btn-block">back to list</a>
+    <a 
+      href="{{ path('job_sector_index') }}" 
+      class="btn btn-light btn-lg btn-block"
+    >
+      back to list
+    </a>
 
     {{ include('job_sector/_delete_form.html.twig') }}
 {% endblock %}

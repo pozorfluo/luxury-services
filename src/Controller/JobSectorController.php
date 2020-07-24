@@ -20,8 +20,20 @@ class JobSectorController extends AbstractController
      */
     public function index(JobSectorRepository $jobSectorRepository): Response
     {
+        $jobSectors = $jobSectorRepository->findAll();
+
+        $forms = [];
+        foreach ($jobSectors as $jobSector) {
+            $forms[$jobSector->getId()] = $this->createForm(
+                JobSectorType::class,
+                $jobSector
+            )->createView();
+        }
+
+
         return $this->render('job_sector/index.html.twig', [
-            'job_sectors' => $jobSectorRepository->findAll(),
+            'job_sectors' => $jobSectors,
+            'forms' => $forms
         ]);
     }
 
@@ -43,7 +55,7 @@ class JobSectorController extends AbstractController
         }
 
         return $this->render('job_sector/new.html.twig', [
-            'job_sector' => $jobSector,
+            // 'job_sector' => $jobSector,
             'form' => $form->createView(),
         ]);
     }
@@ -83,7 +95,7 @@ class JobSectorController extends AbstractController
      */
     public function delete(Request $request, JobSector $jobSector): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$jobSector->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $jobSector->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($jobSector);
             $entityManager->flush();

@@ -110,9 +110,8 @@ class AdminNoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            /**
-             * @var UploadedFile $file
-             */
+            
+            /** @var UploadedFile $file */
             $file = $form->get('file')->getData();
 
             if ($file) {

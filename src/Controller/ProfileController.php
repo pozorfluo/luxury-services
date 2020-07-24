@@ -115,6 +115,7 @@ class ProfileController extends AbstractController
      */
     public function editUser(Request $request): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         // if the user is anonymous, redirect to login form

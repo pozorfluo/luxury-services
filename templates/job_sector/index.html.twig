@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %} {% block title %}JobSector index{% endblock %} {%
 block body %}
 <h1>JobSector index</h1>
-<a href="{{ path('job_sector_new') }}"class="btn btn-success btn-sm">Create new</a>
+<a href="{{ path('job_sector_new') }}" class="btn btn-success btn-sm"
+  >Create new</a
+>
 <table class="table">
   <thead>
     <tr>
@@ -14,10 +16,26 @@ block body %}
     {% for job_sector in job_sectors %}
     <tr>
       <td>{{ job_sector.id }}</td>
-      <td>{{ job_sector.name }}</td>
       <td>
-        <a href="{{ path('job_sector_show', { id: job_sector.id }) }}"class="btn btn-primary btn-sm btn-block">show</a>
-        <a href="{{ path('job_sector_edit', { id: job_sector.id }) }}"class="btn btn-secondary btn-sm btn-block">edit</a>
+        {{ job_sector.name }}
+        {{ form_start(forms[job_sector.id]) }}
+        {{ form_widget(forms[job_sector.id]) }}
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+          {{ button_label|default('Save') }}
+        </button>
+        {{ form_end(forms[job_sector.id]) }}
+      </td>
+      <td>
+        <a
+          href="{{ path('job_sector_show', { id: job_sector.id }) }}"
+          class="btn btn-primary btn-sm btn-block"
+          >show</a
+        >
+        <a
+          href="{{ path('job_sector_edit', { id: job_sector.id }) }}"
+          class="btn btn-secondary btn-sm btn-block"
+          >edit</a
+        >
       </td>
     </tr>
     {% else %}
