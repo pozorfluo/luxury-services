@@ -1,41 +1,59 @@
-{# {% dump app.request.attributes.get('_route') %}
-{% dump app.request.attributes.get('_route_params') %} #}
-{# <details class="text-primary" style="position: fixed; bottom:36px; z-index:4096; padding: 0.rem; font-size: 0.75rem; opacity: 0.5;">
-	<summary style="background-color:#222222">
-		routes
-	</summary>
-	{% for key, route in devlog.getRoutes() %}
-		<details>
-			<summary style="">
-				{{ key }}
-			</summary>
-			{{ dump(route) }}
-		</details>
-	{% endfor %}
-</details> #}
+<style>
+  .devlog {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: 12px Menlo, Monaco, Consolas, monospace;
+    vertical-align: baseline;
+    line-height: 1;
+    quotes: none;
+    list-style: none;
+    border-spacing: 0;
+    background-color: transparent;
+    color: white;
+    z-index: 4096;
+  }
+  .devlog-details {
+    font-size: 10px;
+  }
 
+  .devlog-summary {
+    padding: 0.25rem 1rem;
+    background:  #4f805d7f; /*#22222282;*/
+    border-radius: 0px;
+  }
+  .devlog-summary::before {
+    content: "#";
+  }
 
-<details open="true" class="text-light" style="position: fixed; bottom:36px; z-index:4096; padding: 0.25rem 2rem; font-size: 0.75rem; background-color:#22222282;">
-	<summary style="list-style: none;">
+  .devlog-tab {
+    position: fixed;
+    bottom: 36px;
+    padding: 0.25rem 1rem;
+    background:  #22222282;
+  }
+
+  .devlog .sf-dump {
+    border: 0;
+    background:  #222222ea;
+  }
+
+</style>
+<details
+  open="true"
+  class="devlog devlog-tab"
+>
+  <summary class="devlog">
     devlog
-	</summary>
-    {# {{ dump(devlog.getData()) }} #}
-	{% for key, variable in devlog.getData() %}
-		<details open="true" style="background-color:#22222282;"> 
-			<summary>
-				{{ key }}
-			</summary>
-			{{ variable|raw }}
-		</details>
-	{% endfor %}
+  </summary>
+  {# {{ dump(devlog.getData()) }} #} {% for key, variable in devlog.getData() %}
+  <details open="true" class="devlog">
+    <summary class="devlog devlog-summary">
+      {{ key }}
+    </summary>
+    {{ variable | raw }}
+  </details>
+  {% endfor %}
 </details>
 
-{# {% dump app.request %} #}
-{# <details style="position: fixed; bottom:20px; z-index:4096">
-	<summary style="list-style: none;">
-		{{ dump(app.request.get('_controller')) }}
-	</summary>
-	{{ dump(app.request) }}
-</details> #}
-
-{{ render(controller('App\\Controller\\DevController::dumpRoutes')) }}
+{{ render(controller("App\\Controller\\DevController::dumpRoutes")) }}
