@@ -1,0 +1,86 @@
+table {
+  /* border: 1px solid #ccc; */
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table caption {
+  font-size: 1.5em;
+  margin: 0.5em 0 0.75em;
+}
+
+table tr {
+  padding: 0.35em;
+}
+
+table th,
+table td {
+  padding: 0.625em;
+  text-align: center;
+}
+
+table td {
+  word-wrap: break-word;
+}
+
+table th {
+  font-size: 0.8em;
+  /* letter-spacing: 0.1em;
+    text-transform: uppercase; */
+}
+
+/*
+  Max width before this PARTICULAR table gets nasty. 
+  This query will take effect for any screen smaller than 900px and also iPads specifically.
+  */
+@media only screen and (max-width: 900px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    margin: 0 0 1rem 0;
+  }
+
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    /* border-bottom: 1px solid #eee; */
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  td::before {
+    content: attr(data-label);
+  }
+}

@@ -72,6 +72,7 @@ class ProfileController extends AbstractController
         return $this->render('profile/new.html.twig', [
             'profile' => $profile,
             'form' => $form->createView(),
+            'adminNote' =>   $profile->getAdminNote() ?? new AdminNote()
         ]);
     }
 
@@ -107,6 +108,7 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/show.html.twig', [
             'profile' => $profile,
+            'adminNote' =>   $profile->getAdminNote() ?? new AdminNote()
         ]);
     }
 

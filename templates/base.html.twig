@@ -21,16 +21,11 @@
       crossorigin="anonymous"
     />
     {% block stylesheets %}
-    <style>
-      .table{
-        table-layout: fixed;
-        width: 100%
-      }
-
-      .table td {
-        word-wrap: break-word;
-      }
-    </style>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="{{ asset('tables.css', 'styles')}}"
+    />
     {% endblock %}
 
     <title>
