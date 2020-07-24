@@ -65,9 +65,7 @@ class JobController extends AbstractController
         $jobSectors = $jobSectorRepository->findAll();
 
 
-        $dev = new DevLog($applications);
-        // $devlog->log('$applications flipped', array_flip($applications));
-        // $devlog->log('$jobSectors', $jobSectors);
+        $dev = new DevLog($applications, "before");
 
         return $this->render('job/job_offers.html.twig', [
             'jobs' => $jobs,

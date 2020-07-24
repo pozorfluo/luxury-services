@@ -26,7 +26,7 @@ class ApplicationRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()
             ->getConnection();
 
-        $dev = new DevLog($conn);
+        $dev = new DevLog($conn, 'from ApplicationRepository');
 
         $stmt = $conn->prepare(
             'SELECT

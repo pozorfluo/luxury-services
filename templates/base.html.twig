@@ -20,7 +20,18 @@
       integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
       crossorigin="anonymous"
     />
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+    <style>
+      .table{
+        /* table-layout: fixed; */
+        width: 100%
+      }
+
+      .table td {
+        word-wrap: break-word;
+      }
+    </style>
+    {% endblock %}
 
     <title>
       {% block title %} Luxury Services {% endblock %}
@@ -29,107 +40,82 @@
 
   <body class="pt-4">
     {% block nav %}
-    <nav class="navbar navbar-expand-lg  fixed-top navbar-dark text-secondary bg-primary">
+    <nav
+      class="navbar navbar-expand-lg fixed-top navbar-dark text-secondary bg-primary"
+    >
       <a class="navbar-brand" href="#">Devbar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li>
-
+          <li></li>
+          <li class="nav-item active">
+            <a href="{{ path('user_index') }}" class="nav-link">user</a>
           </li>
           <li class="nav-item active">
-            <a
-                href="{{ path('user_index') }}"
-                class="nav-link"
-                >user</a
-              >
+            <a href="{{ path('client_index') }}" class="nav-link">client</a>
           </li>
           <li class="nav-item active">
-            <a
-                href="{{ path('client_index') }}"
-                class="nav-link"
-                >client</a
-              >
-          </li>
-          <li class="nav-item active">
-            <a
-                href="{{ path('job_sector_index') }}"
-                class="nav-link"
-                >job_sector</a
-              >
-          </li>
-          <li class="nav-item active">
-            <a
-                href="{{ path('job_index') }}"
-                class="nav-link"
-                >job</a
-              >
-          </li>
-          <li class="nav-item active">
-            <a
-                href="{{ path('profile_index') }}"
-                class="nav-link"
-                >profile</a
-              >
-          </li>
-          <li class="nav-item active">
-            <a
-            href="{{ path('application_index') }}"
-            class="nav-link"
-            >application</a
-          >
-          </li>
-          <li class="nav-item active">
-            <a
-            href="{{ path('admin_note_index') }}"
-            class="nav-link"
-            >admin_note</a
-          >
-          </li>
-          <li class="nav-item active">
-            <a
-            href="{{ path('profile_show_user') }}"
-            class="nav-link"
-            >user profile</a
-          >
-          </li>
-          <li class="nav-item active">
-            <a
-            href="{{ path('app_login') }}"
-            class="nav-link"
+            <a href="{{ path('job_sector_index') }}" class="nav-link"
+              >job_sector</a
             >
+          </li>
+          <li class="nav-item active">
+            <a href="{{ path('job_index') }}" class="nav-link">job</a>
+          </li>
+          <li class="nav-item active">
+            <a href="{{ path('profile_index') }}" class="nav-link">profile</a>
+          </li>
+          <li class="nav-item active">
+            <a href="{{ path('application_index') }}" class="nav-link"
+              >application</a
+            >
+          </li>
+          <li class="nav-item active">
+            <a href="{{ path('admin_note_index') }}" class="nav-link"
+              >admin_note</a
+            >
+          </li>
+          <li class="nav-item active">
+            <a href="{{ path('profile_show_user') }}" class="nav-link"
+              >user profile</a
+            >
+          </li>
+          <li class="nav-item active">
+            <a href="{{ path('app_login') }}" class="nav-link">
               <span class="material-icons">
                 login
               </span>
-            </a
-          >
+            </a>
           </li>
           <li class="nav-item active">
-            <a
-            href="{{ path('app_logout') }}"
-            class="nav-link"
-            >
+            <a href="{{ path('app_logout') }}" class="nav-link">
               <span class="material-icons">
                 close
               </span>
-            </a
-          >
+            </a>
           </li>
         </ul>
       </div>
     </nav>
 
     {% endblock %}
-    <div class="container pt-5">
-
-      {{ include('_flash.html.twig')}}
+    <div class="container-fluid pt-5">
+      {{ include("_flash.html.twig") }}
 
       {% block body %}{% endblock %}
     </div>
     {% block footer %} {% endblock %}
-    {{ include('dev/_dump.html.twig') }}
+    {{ include("dev/_dump.html.twig") }}
     <!--Import bootstrap .js -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
