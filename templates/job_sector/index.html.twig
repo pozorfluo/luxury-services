@@ -1,35 +1,31 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}JobSector index{% endblock %} {%
+block body %}
+<h1>JobSector index</h1>
+<a href="{{ path('job_sector_new') }}"class="btn btn-success btn-sm">Create new</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for job_sector in job_sectors %}
+    <tr>
+      <td>{{ job_sector.id }}</td>
+      <td>{{ job_sector.name }}</td>
+      <td>
+        <a href="{{ path('job_sector_show', { id: job_sector.id }) }}"class="btn btn-primary btn-sm btn-block">show</a>
+        <a href="{{ path('job_sector_edit', { id: job_sector.id }) }}"class="btn btn-secondary btn-sm btn-block">edit</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="3">no records found</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-{% block title %}JobSector index{% endblock %}
-
-{% block body %}
-    <h1>JobSector index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for job_sector in job_sectors %}
-            <tr>
-                <td>{{ job_sector.id }}</td>
-                <td>{{ job_sector.name }}</td>
-                <td>
-                    <a href="{{ path('job_sector_show', {'id': job_sector.id}) }}">show</a>
-                    <a href="{{ path('job_sector_edit', {'id': job_sector.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('job_sector_new') }}">Create new</a>
 {% endblock %}

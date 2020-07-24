@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>Client index</h1>
-
+    <a href="{{ path('client_new') }}"class="btn btn-success btn-sm">Create new</a>
     <table class="table">
         <thead>
             <tr>
@@ -31,8 +31,8 @@
                 <td>{{ client.createdAt ? client.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ client.updatedAt ? client.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('client_show', {'id': client.id}) }}">show</a>
-                    <a href="{{ path('client_edit', {'id': client.id}) }}">edit</a>
+                    <a href="{{ path('client_show', {'id': client.id}) }}"class="btn btn-primary btn-sm btn-block">show</a>
+                    <a href="{{ path('client_edit', {'id': client.id}) }}"class="btn btn-secondary btn-sm btn-block">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -42,6 +42,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('client_new') }}">Create new</a>
 {% endblock %}

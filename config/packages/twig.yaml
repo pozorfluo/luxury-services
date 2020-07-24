@@ -3,4 +3,8 @@ twig:
 
     globals:
         admin_notes_dir: '%admin_notes_dir%'
+        users_dir: '%users_dir%'
         devlog: '@App\Service\DevLog'
+
+    # form_themes: ['bootstrap_4_layout.html.twig']
+    form_themes: ['bootstrap_4_horizontal_layout.html.twig']

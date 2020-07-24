@@ -7,6 +7,8 @@ use App\Entity\Profile;
 use App\Form\ProfileType;
 use DateTime;
 use App\Repository\ProfileRepository;
+use App\Service\DevLog;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +17,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Service\FileUpload;
+use Symfony\Component\Form\Test\FormInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+
 
 /**
  * @Route("/profile")
@@ -55,26 +60,22 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            /**
-             * @var UploadedFile $file
-             */
-            $file = $form->get('adminNote')->get('file')->getData();
 
-            if ($file) {
-                $filename = $fileUpload->save(
-                    $file,
-                    $this->getParameter('admin_notes_dir')
-                );
-                $profile->getAdminNote()->setFiles([$filename]);
-                $this->addFlash(
-                    'notice',
-                    $filename . ' saved !'
-                );
+            $path = $this->getParameter('users_dir')
+                . DIRECTORY_SEPARATOR
+                . $user->getId();
 
-                $this->addFlash(
-                    'success',
-                    'Note created !'
-                );
+            $profile->setPicture(
+                $this->retrieveUpload($form, 'picture', $path)
+            );
+            $profile->setCurriculumVitae(
+                $this->retrieveUpload($form, 'curriculumVitae', $path)
+            );
+            $profile->setPassportScan(
+                $this->retrieveUpload($form, 'passportScan', $path)
+            );
+            if($profile->getPassportScan() !== '') {
+                $profile->setHasPassport(true);
             }
 
             $profile->setUser($user);
@@ -166,32 +167,35 @@ class ProfileController extends AbstractController
         // return $this->editForm($request, $profile, $slugger);
         $this->denyAccessUnlessGranted('edit', $profile);
 
+
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $adminNote = $profile->getAdminNote();
-            /**
-             * @var UploadedFile $file
-             */
-            $file = $form->get('adminNote')->get('file')->getData();
-
-            if ($file) {
-                $filename = $fileUpload->save(
-                    $file,
-                    $this->getParameter('admin_notes_dir')
-                );
-                $adminNote->setFiles([$filename]);
-                $this->addFlash(
-                    'notice',
-                    $filename . ' saved !'
-                );
-            }
 
             $now = new DateTime();
             $profile->setUpdatedAt($now);
-            $adminNote->setUpdatedAt($now);
+
+            if ($this->isGranted('ROLE_ADMIN')) {
+                $adminNote = $profile->getAdminNote();
+
+                $file = $form->get('adminNote')->get('file')->getData();
+
+                if ($file) {
+                    $filename = $fileUpload->save(
+                        $file,
+                        $this->getParameter('admin_notes_dir')
+                    );
+                    $adminNote->setFiles([$filename]);
+
+                    $this->addFlash(
+                        'notice',
+                        $filename . ' saved !'
+                    );
+                }
+                $adminNote->setUpdatedAt($now);
+            }
 
             $entityManager->flush();
 
@@ -200,6 +204,7 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/edit.html.twig', [
             'profile' => $profile,
+            'adminNote' =>   $profile->getAdminNote() ?? new AdminNote(),
             'form' => $form->createView(),
         ]);
     }
@@ -222,5 +227,46 @@ class ProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('profile_new');
+    }
+
+    /**
+     * @Route("/download/{filename}", name="profile_download", methods={"GET"})
+     */
+    public function download(string $filename): Response
+    {
+        $this->denyAccessUnlessGranted('view', $this->getUser()->getProfile());
+
+        return $this->file(
+            rtrim($this->getParameter('users_dir'), '/\\')
+                . DIRECTORY_SEPARATOR
+                . $filename,
+            $filename,
+            ResponseHeaderBag::DISPOSITION_INLINE
+        );
+    }
+
+    private function retrieveUpload(
+        FormInterface $form,
+        string $field,
+        string $path
+    ): string {
+        $fileUpload = new FileUpload(new AsciiSlugger());
+        /** @var UploadedFile $file*/
+        $file = $form->get($field)->getData();
+
+        $filename ='';
+        if ($file) {
+            $filename = $fileUpload->save(
+                $file,
+                $path
+            );
+
+            $this->addFlash(
+                'notice',
+                $filename . ' saved !'
+            );
+        }
+
+        return $filename;
     }
 }

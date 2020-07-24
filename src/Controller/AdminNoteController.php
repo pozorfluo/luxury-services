@@ -40,14 +40,13 @@ class AdminNoteController extends AbstractController
     {
         $adminNote = new AdminNote();
 
-        $devLog = new DevLog();
-        $devLog->log('before', $adminNote);
+        $dev = new DevLog($adminNote, 'before');
 
         // dump($adminNote);
         $form = $this->createForm(AdminNoteType::class, $adminNote);
         $form->handleRequest($request);
         $adminNote->setContent('something new !');
-        $devLog->log('after', $adminNote);
+        $dev->log( $adminNote, 'after');
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();

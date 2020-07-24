@@ -9,7 +9,7 @@
     name="_token"
     value="{{ csrf_token('delete' ~ application.profile) }}"
   />
-  <button type="submit" class="btn btn-danger">
+  <button type="submit" class="btn btn-danger btn-sm btn-block">
     {{ button_label|default('Delete') }}
   </button>
 </form>

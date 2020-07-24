@@ -35,7 +35,7 @@ class AdminNoteType extends AbstractType
                             . 'Allowed mime types are {{ types }}.',
                     ])
                 ],
-                'attr' => ['class' => 'form-inline']
+                'attr' => ['class' => 'form-control-file'],
             ])
             // ->add('createdAt')
             // ->add('updatedAt')

@@ -1,11 +1,15 @@
 {{ form_start(form) }}
 {{ form_widget(form) }}
-{% for file in profile.adminNote.files %}
-<a href="{{ path('admin_note_download', { filename: file }) }}">
-  {{ file }}
-</a>
-{% endfor %}
-<button type="submit" class="btn btn-primary">
+
+{% if is_granted('ROLE_ADMIN') %}
+    {% for file in adminNote.files %}
+    <a href="{{ path('admin_note_download', { filename: file }) }}">
+      {{ file }}
+    </a>
+    {% endfor %}
+{% endif %}
+<hr />
+<button type="submit" class="btn btn-primary btn-lg btn-block">
   {{ button_label|default('Save') }}
 </button>
 {{ form_end(form) }}

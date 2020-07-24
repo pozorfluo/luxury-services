@@ -64,7 +64,6 @@ class JobController extends AbstractController
         $jobs = $jobRepository->findBy(['isActive' => true], null, 100);
         $jobSectors = $jobSectorRepository->findAll();
 
-
         $dev = new DevLog($applications, "before");
 
         return $this->render('job/job_offers.html.twig', [

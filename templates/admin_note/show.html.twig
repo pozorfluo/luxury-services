@@ -36,9 +36,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('admin_note_index') }}">back to list</a>
+    <a href="{{ path('admin_note_index') }}"class="btn btn-light btn-lg btn-block">back to list</a>
 
-    <a href="{{ path('admin_note_edit', {'id': admin_note.id}) }}">edit</a>
+    <a href="{{ path('admin_note_edit', {'id': admin_note.id}) }}"class="btn btn-secondary btn-sm btn-block">edit</a>
 
     {{ include('admin_note/_delete_form.html.twig') }}
 {% endblock %}

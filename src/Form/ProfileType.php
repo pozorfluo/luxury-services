@@ -10,6 +10,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ProfileType extends AbstractType
 {
@@ -28,10 +30,71 @@ class ProfileType extends AbstractType
             ->add('address')
             ->add('country')
             ->add('nationality')
-            ->add('hasPassport')
-            ->add('passportScan')
-            ->add('curriculumVitae')
-            ->add('picture')
+            ->add('passportScan', FileType::class, [
+                'label' => 'Passport scan : Upload an image or PDF document.',
+                // 'data_class' => null
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' =>  '4096k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                            'image/*'
+                        ],
+                        'maxSizeMessage' => 'The file is too large ({{ size }} {{ suffix }}). '
+                            . 'Allowed maximum size is {{ limit }} {{ suffix }}.',
+                        'mimeTypesMessage' => 'Please upload an image or PDF document. '
+                            . 'The mime type of the file is invalid ({{ type }}). '
+                            . 'Allowed mime types are {{ types }}.',
+                    ])
+                ],
+                'attr' => ['class' => 'form-inline']
+            ])
+            ->add('curriculumVitae', FileType::class, [
+                'label' => 'CV : Upload an image or PDF document.',
+                // 'data_class' => null
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' =>  '4096k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'maxSizeMessage' => 'The file is too large ({{ size }} {{ suffix }}). '
+                            . 'Allowed maximum size is {{ limit }} {{ suffix }}.',
+                        'mimeTypesMessage' => 'Please upload an image or PDF document. '
+                            . 'The mime type of the file is invalid ({{ type }}). '
+                            . 'Allowed mime types are {{ types }}.',
+                    ])
+                ],
+                'attr' => ['class' => 'form-inline']
+            ])
+            ->add('picture', FileType::class, [
+                'label' => 'Profile picture : Upload an image or PDF document.',
+                // 'data_class' => null
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' =>  '4096k',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                            'image/*'
+                        ],
+                        'maxSizeMessage' => 'The file is too large ({{ size }} {{ suffix }}). '
+                            . 'Allowed maximum size is {{ limit }} {{ suffix }}.',
+                        'mimeTypesMessage' => 'Please upload an image or PDF document. '
+                            . 'The mime type of the file is invalid ({{ type }}). '
+                            . 'Allowed mime types are {{ types }}.',
+                    ])
+                ],
+                'attr' => ['class' => 'form-inline']
+            ])
             ->add('currentLocation')
             ->add('dateOfBirth', BirthdayType::class, [
                 'widget' => 'single_text',
