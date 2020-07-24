@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Service\FileUpload;
-use Symfony\Component\Form\Test\FormInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 
@@ -41,9 +41,8 @@ class ProfileController extends AbstractController
      * @Route("/new", name="profile_new", methods={"GET","POST"})
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
-    public function new(Request $request, FileUpload $fileUpload): Response
+    public function new(Request $request): Response
     {
-        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         // Redirect users who already have a profile to edit form
@@ -60,25 +59,9 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-
-            $path = $this->getParameter('users_dir')
-                . DIRECTORY_SEPARATOR
-                . $user->getId();
-
-            $profile->setPicture(
-                $this->retrieveUpload($form, 'picture', $path)
-            );
-            $profile->setCurriculumVitae(
-                $this->retrieveUpload($form, 'curriculumVitae', $path)
-            );
-            $profile->setPassportScan(
-                $this->retrieveUpload($form, 'passportScan', $path)
-            );
-            if($profile->getPassportScan() !== '') {
-                $profile->setHasPassport(true);
-            }
-
             $profile->setUser($user);
+
+            $this->setProfileWithFormFiles($profile, $form);
 
             $entityManager->persist($profile);
             $entityManager->flush();
@@ -130,9 +113,8 @@ class ProfileController extends AbstractController
     /**
      * @Route("/edit", name="profile_edit_user", methods={"GET","POST"}, priority=2)
      */
-    public function editUser(Request $request, FileUpload $fileUpload): Response
+    public function editUser(Request $request): Response
     {
-        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         // if the user is anonymous, redirect to login form
@@ -142,14 +124,13 @@ class ProfileController extends AbstractController
 
         $profile = $user->getProfile();
 
+        // Redirect users who do not have a profile to create form
         if (!isset($profile)) {
             $profile = new Profile();
             return $this->redirectToRoute('profile_new');
         }
 
-        // $this->denyAccessUnlessGranted('edit', $profile);
-
-        return $this->edit($request, $profile, $fileUpload);
+        return $this->edit($request, $profile);
     }
 
     /**
@@ -157,16 +138,9 @@ class ProfileController extends AbstractController
      */
     public function edit(
         Request $request,
-        Profile $profile,
-        FileUpload $fileUpload
+        Profile $profile
     ): Response {
-        // $formData = [
-        //     'profile' => $profile,
-        //     'adminNote' => $adminNote
-        // ]
-        // return $this->editForm($request, $profile, $slugger);
         $this->denyAccessUnlessGranted('edit', $profile);
-
 
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
@@ -179,23 +153,17 @@ class ProfileController extends AbstractController
 
             if ($this->isGranted('ROLE_ADMIN')) {
                 $adminNote = $profile->getAdminNote();
-
-                $file = $form->get('adminNote')->get('file')->getData();
-
-                if ($file) {
-                    $filename = $fileUpload->save(
-                        $file,
-                        $this->getParameter('admin_notes_dir')
-                    );
-                    $adminNote->setFiles([$filename]);
-
-                    $this->addFlash(
-                        'notice',
-                        $filename . ' saved !'
-                    );
-                }
+                // dd($form->get('adminNote'));
+                $path = $this->getParameter('admin_notes_dir');
+                $adminNote->setFiles([$this->retrieveUpload(
+                    $form->get('adminNote'),
+                    'file',
+                    $path
+                )]);
                 $adminNote->setUpdatedAt($now);
             }
+
+            $this->setProfileWithFormFiles($profile, $form);
 
             $entityManager->flush();
 
@@ -230,14 +198,16 @@ class ProfileController extends AbstractController
     }
 
     /**
-     * @Route("/download/{filename}", name="profile_download", methods={"GET"})
+     * @Route("/download/{userId}/{filename}", name="profile_download", methods={"GET"})
      */
-    public function download(string $filename): Response
+    public function download(string $userId, string $filename): Response
     {
         $this->denyAccessUnlessGranted('view', $this->getUser()->getProfile());
 
         return $this->file(
             rtrim($this->getParameter('users_dir'), '/\\')
+                . DIRECTORY_SEPARATOR
+                . $userId
                 . DIRECTORY_SEPARATOR
                 . $filename,
             $filename,
@@ -254,7 +224,7 @@ class ProfileController extends AbstractController
         /** @var UploadedFile $file*/
         $file = $form->get($field)->getData();
 
-        $filename ='';
+        $filename = '';
         if ($file) {
             $filename = $fileUpload->save(
                 $file,
@@ -268,5 +238,25 @@ class ProfileController extends AbstractController
         }
 
         return $filename;
+    }
+
+    private function setProfileWithFormFiles(Profile $profile, FormInterface $form)
+    {
+        $path = $this->getParameter('users_dir')
+            . DIRECTORY_SEPARATOR
+            . $profile->getUser()->getId();
+
+        $profile->setPicture(
+            $this->retrieveUpload($form, 'picture', $path)
+        );
+        $profile->setCurriculumVitae(
+            $this->retrieveUpload($form, 'curriculumVitae', $path)
+        );
+        $profile->setPassportScan(
+            $this->retrieveUpload($form, 'passportScan', $path)
+        );
+        if ($profile->getPassportScan() !== '') {
+            $profile->setHasPassport(true);
+        }
     }
 }

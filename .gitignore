@@ -2,7 +2,7 @@
 .[Aa]rchive/
 .tmp/
 resources/assets/admin/
-resources/assets/profiles/
+resources/assets/users/
 # .archive/*
 # .tmp/*
 

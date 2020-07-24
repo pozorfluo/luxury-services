@@ -40,7 +40,7 @@ body %}
       <th>PassportScan</th>
       <td>
         {% if profile.passportScan %}
-        <a href="{{ path('profile_download', { filename: profile.passportScan  }) }}">
+        <a href="{{ path('profile_download', { userId: profile.user.id, filename: profile.passportScan  }) }}">
           {{ profile.passportScan  }}
         </a>
         {% endif %}
@@ -50,7 +50,7 @@ body %}
       <th>CurriculumVitae</th>
       <td>
         {% if profile.curriculumVitae %}
-        <a href="{{ path('profile_download', { filename: profile.curriculumVitae  }) }}">
+        <a href="{{ path('profile_download', { userId: profile.user.id, filename: profile.curriculumVitae  }) }}">
           {{ profile.curriculumVitae  }}
         </a>
         {% endif %}
@@ -60,7 +60,7 @@ body %}
       <th>Picture</th>
       <td>
         {% if profile.picture %}
-        <a href="{{ path('profile_download', { filename: profile.picture }) }}">
+        <a href="{{ path('profile_download', { userId: profile.user.id, filename: profile.picture }) }}">
           {{ profile.picture }}
         </a>
         {% endif %}
