@@ -6,21 +6,21 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th >Id</th>
-				<th >FirstName</th>
-				<th >LastName</th>
-				<th >HasPassport</th>
-				<th >CurrentLocation</th>
-				<th >DateOfBirth</th>
-				<th >IsAvailable</th>
-				<th >Experience</th>
-				<th ></th>
+				<th>Id</th>
+				<th>FirstName</th>
+				<th>LastName</th>
+				<th>HasPassport</th>
+				<th>CurrentLocation</th>
+				<th>DateOfBirth</th>
+				<th>IsAvailable</th>
+				<th>Experience</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for profile in profiles %}
 				<tr>
-					<td data-label="id">{{ profile.id ?? "-" }}</td>
+					<td data-label="Id">{{ profile.id ?? "-" }}</td>
 					<td data-label="FirstName">{{ profile.firstName ?? "-" }}</td>
 					<td data-label="LastName">{{ profile.lastName ?? "-" }}</td>
 					<td data-label="HasPassport">{{ profile.hasPassport ? "Yes" : "No" }}</td>

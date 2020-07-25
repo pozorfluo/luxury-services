@@ -107,9 +107,11 @@ body %}
       <th>Admin Files</th>
       <td>
         {% for file in profile.adminNote.files %}
-        <a href="{{ path('admin_note_download', { filename: file }) }}">
-          {{ file }}
-        </a>
+            {% if not file is empty %}
+                <a href="{{ path('admin_note_download', { filename: file }) }}">
+                    {{ file }}
+                </a>
+            {% endif %}
         {% endfor %}
       </td>
     </tr>

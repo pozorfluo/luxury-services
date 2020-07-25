@@ -104,7 +104,7 @@
     </nav>
 
     {% endblock %}
-    <div class="container pt-5">
+    <div class="container-fluid pt-5">
       {{ include("_flash.html.twig") }}
 
       {% block body %}{% endblock %}
@@ -127,6 +127,15 @@
       integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
       crossorigin="anonymous"
     ></script>
-    {% block javascripts %}{% endblock %}
+    {% block javascripts %}
+        <script>
+            $('.custom-file-input').on('change', function(event) {
+                var inputFile = event.currentTarget;
+                $(inputFile).parent()
+                    .find('.custom-file-label')
+                    .html(inputFile.files[0].name);
+            });
+        </script>
+    {% endblock %}
   </body>
 </html>

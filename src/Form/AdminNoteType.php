@@ -16,7 +16,7 @@ class AdminNoteType extends AbstractType
         $builder
             ->add('content')
             ->add('file', FileType::class, [
-                'label' => 'Upload an image or PDF document.',
+                // 'label' => 'Upload an image or PDF document.',
                 // 'data_class' => null
                 'mapped' => false,
                 'required' => false,
@@ -35,7 +35,10 @@ class AdminNoteType extends AbstractType
                             . 'Allowed mime types are {{ types }}.',
                     ])
                 ],
-                'attr' => ['class' => 'form-control-file'],
+                'attr' => [
+                    'class' => 'form-inline',
+                    'placeholder' => 'Select an image or PDF document.'
+                    ]
             ])
             // ->add('createdAt')
             // ->add('updatedAt')

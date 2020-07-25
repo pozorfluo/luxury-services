@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 
 class ProfileType extends AbstractType
 {
@@ -31,7 +32,7 @@ class ProfileType extends AbstractType
             ->add('country')
             ->add('nationality')
             ->add('passportScan', FileType::class, [
-                'label' => 'Passport scan : Upload an image or PDF document.',
+                // 'label' => 'Passport scan : Upload an image or PDF document.',
                 // 'data_class' => null
                 'mapped' => false,
                 'required' => false,
@@ -52,11 +53,20 @@ class ProfileType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'form-inline',
-                    'placeholder' => 'Select a passport scan.'
-                    ]
+                    'placeholder' => 'Select an image or PDF document.'
+                ]
             ])
+            // ->add(
+            //     'existingPassportScan',
+            //     UrlType::class,
+            //     [
+            //         'label' => 'Current file',
+            //         'required' => false,
+            //         'mapped' => false
+            //     ]
+            // )
             ->add('curriculumVitae', FileType::class, [
-                'label' => 'CV : Upload an image or PDF document.',
+                // 'label' => 'CV : Upload an image or PDF document.',
                 // 'data_class' => null
                 'mapped' => false,
                 'required' => false,
@@ -74,10 +84,13 @@ class ProfileType extends AbstractType
                             . 'Allowed mime types are {{ types }}.',
                     ])
                 ],
-                'attr' => ['class' => 'form-inline']
+                'attr' => [
+                    'class' => 'form-inline',
+                    'placeholder' => 'Select an image or PDF document.'
+                ]
             ])
             ->add('picture', FileType::class, [
-                'label' => 'Profile picture : Upload an image or PDF document.',
+                // 'label' => 'Profile picture : Upload an image or PDF document.',
                 // 'data_class' => null
                 'mapped' => false,
                 'required' => false,
@@ -96,7 +109,10 @@ class ProfileType extends AbstractType
                             . 'Allowed mime types are {{ types }}.',
                     ])
                 ],
-                'attr' => ['class' => 'form-inline']
+                'attr' => [
+                    'class' => 'form-inline',
+                    'placeholder' => 'Select an image or PDF document.'
+                ]
             ])
             ->add('currentLocation')
             ->add('dateOfBirth', BirthdayType::class, [
@@ -117,9 +133,7 @@ class ProfileType extends AbstractType
         // ->add('deletedAt')
 
         if ($this->auth->isGranted('ROLE_ADMIN')) {
-            $builder->add('adminNote', AdminNoteType::class, [
-                'attr' => ['class' => 'form-inline']
-            ]);
+            $builder->add('adminNote', AdminNoteType::class, []);
         }
     }
 

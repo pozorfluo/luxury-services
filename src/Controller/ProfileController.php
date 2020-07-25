@@ -158,16 +158,18 @@ class ProfileController extends AbstractController
                 $adminNote = $profile->getAdminNote();
                 // dd($form->get('adminNote'));
                 $path = $this->getParameter('admin_notes_dir');
-                $adminNote->setFiles([$this->retrieveUpload(
+                $filename = $this->retrieveUpload(
                     $form->get('adminNote'),
                     'file',
                     $path
-                )]);
-                $adminNote->setUpdatedAt($now);
+                );
+                if($filename) {
+                    $adminNote->setFiles([$filename]);
+                    $adminNote->setUpdatedAt($now);
+                }
             }
 
             $this->setProfileWithFormFiles($profile, $form);
-
             $entityManager->flush();
 
             return $this->redirectToRoute('profile_index');
@@ -249,16 +251,19 @@ class ProfileController extends AbstractController
             . DIRECTORY_SEPARATOR
             . $profile->getUser()->getId();
 
-        $profile->setPicture(
-            $this->retrieveUpload($form, 'picture', $path)
-        );
-        $profile->setCurriculumVitae(
-            $this->retrieveUpload($form, 'curriculumVitae', $path)
-        );
-        $profile->setPassportScan(
-            $this->retrieveUpload($form, 'passportScan', $path)
-        );
-        if ($profile->getPassportScan() !== '') {
+        $filename =  $this->retrieveUpload($form, 'picture', $path);
+        if($filename) {
+            $profile->setPicture($filename);
+        }
+
+        $filename =  $this->retrieveUpload($form, 'curriculumVitae', $path);
+        if($filename) {
+            $profile->setCurriculumVitae($filename);
+        }
+
+        $filename =  $this->retrieveUpload($form, 'passportScan', $path);
+        if($filename) {
+            $profile->setPassportScan($filename);
             $profile->setHasPassport(true);
         }
     }

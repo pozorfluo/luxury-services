@@ -1,15 +1,63 @@
 {{ form_start(form) }}
 {{ form_widget(form) }}
 
+{% if profile.passportScan %}
+    <p>
+        PassportScan
+        <a href="{{ path('profile_download', { userId: profile.user.id, filename: profile.passportScan  }) }}">
+            {{ profile.passportScan  }}
+        </a>
+    </p>
+{% endif %}
+
+{% if profile.curriculumVitae %}
+    <p>
+        CurriculumVitae
+        <a href="{{ path('profile_download', { userId: profile.user.id, filename: profile.curriculumVitae  }) }}">
+            {{ profile.curriculumVitae  }}
+        </a>
+    </p>
+{% endif %}
+
+{% if profile.picture %}
+    <p>
+        Picture
+        <a href="{{ path('profile_download', { userId: profile.user.id, filename: profile.picture }) }}">
+            {{ profile.picture }}
+        </a>
+    </p>
+{% endif %}
+
 {% if is_granted('ROLE_ADMIN') %}
-	{% for file in adminNote.files %}
-		<a href="{{ path('admin_note_download', { filename: file }) }}">
-			{{ file }}
-		</a>
-	{% endfor %}
+    {% for file in adminNote.files %}
+        {% if not file is empty %}
+            <p>
+                Admin Note
+                <a href="{{ path('admin_note_download', { filename: file }) }}">
+                    {{ file }}
+                </a>
+            </p>
+        {% endif %}
+    {% endfor %}
 {% endif %}
 <hr/>
-<button type="submit" class="btn btn-primary btn-lg btn-block">
-	{{ button_label|default('Save') }}
-</button>
+
+<div class="row">
+    <div class="col-md-8 pb-1 order-md-3">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+            {{ button_label|default('Save') }}
+        </button>
+    </div>
+    <div class="col-md-2 pb-1 order-md-2">
+        <a 
+            href="{{ path('profile_index') }}"
+            class="btn btn-outline-secondary btn-lg btn-block"
+        >
+            Cancel
+        </a>
+    </div>
+    <div class="col-md-2 pb-1 order-md-1">
+        {{ include('profile/_delete_form.html.twig') }}
+    </div>
+</div>
 {{ form_end(form) }}
