@@ -5,7 +5,7 @@
 >
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ profile.id) }}">
-    <button type="submit" class="btn btn-outline-danger btn-lg btn-block">
+    <button type="submit" class="btn btn-outline-danger {{ button_size|default('btn-sm')}} btn-block">
   {# {{ button_label|default('Delete') }} #}
     Delete
 </button>
